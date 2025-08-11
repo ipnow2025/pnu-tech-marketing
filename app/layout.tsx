@@ -4,9 +4,9 @@ import { GeistMono } from 'geist/font/mono'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
+  title: '대학 기술사업화 유망기술 설명회',
+  description: '대학 기술사업화 유망기술 설명회',
+  generator: '대학 기술사업화 유망기술 설명회',
 }
 
 export const viewport = {

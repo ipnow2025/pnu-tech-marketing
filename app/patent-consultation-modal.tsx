@@ -50,57 +50,87 @@ export function PatentConsultationModal({
   // 특허가 없어도(발표 상담 등) 열릴 수 있도록 변경
   if (!isOpen) return null
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // 특허 정보는 있을 때만 포함
-    const patentInfo = patent
-      ? {
-          techField: patent.techField,
-          patentName: patent.patentName,
-          applicationNumber: patent.applicationNumber,
-          registrationNumber: patent.registrationNumber,
-          fee: patent.fee,
-          applicationDate: patent.applicationDate,
-          expiryDate: patent.expiryDate,
-        }
-      : undefined
-
-    const technologyName = patent?.patentName || selectionTitle || ""
-
-    const consultationData = {
-      id: Date.now(), // 임시 ID
-      type: "기술상담",
-      status: "대기",
-      appliedAt: new Date().toISOString().split("T")[0],
-      // 특허 정보(선택적)
-      ...(patentInfo ? { patent: patentInfo } : {}),
-      // 신청자 정보
-      ...formData,
-      // 기존 필드와 호환
-      technology: technologyName,
+    // 필수 필드 검증
+    if (!formData.companyName || !formData.representative || !formData.contactPerson || 
+        !formData.contact || !formData.email || !formData.technologyContent) {
+      alert('필수 항목을 모두 입력해주세요.')
+      return
     }
 
-    onSubmit(consultationData)
-    onClose()
+    try {
+      // API 호출을 위한 데이터 준비
+      const consultationData = {
+        // 특허 정보
+        patentTechField: patent?.techField || null,
+        patentName: patent?.patentName || null,
+        patentApplicationNumber: patent?.applicationNumber || null,
+        patentRegistrationNumber: patent?.registrationNumber || null,
+        patentFee: patent?.fee || null,
+        patentApplicationDate: patent?.applicationDate || null,
+        patentExpiryDate: patent?.expiryDate || null,
+        
+        // 회사 정보
+        companyName: formData.companyName,
+        representativeName: formData.representative,
+        establishedDate: formData.establishedDate,
+        companyPhone: formData.companyPhone,
+        faxPhone: formData.faxPhone,
+        companyAddress: formData.address,
+        businessType: formData.businessType,
+        employeeCount: formData.employeeCount,
+        
+        // 담당자 정보
+        contactPerson: formData.contactPerson,
+        department: formData.department,
+        position: formData.position,
+        mobilePhone: formData.contact,
+        email: formData.email,
+        
+        // 상담 내용
+        technologyContent: formData.technologyContent
+      }
 
-    // 폼 초기화
-    setFormData({
-      companyName: "",
-      representative: "",
-      establishedDate: "",
-      companyPhone: "",
-      faxPhone: "",
-      address: "",
-      businessType: "",
-      employeeCount: "",
-      contactPerson: "",
-      department: "",
-      position: "",
-      contact: "",
-      email: "",
-      technologyContent: "",
-    })
+      const response = await fetch('/api/patent-consultations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(consultationData),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        alert('특허 상담신청이 성공적으로 제출되었습니다!')
+        onClose()
+        
+        // 폼 초기화
+        setFormData({
+          companyName: "",
+          representative: "",
+          establishedDate: "",
+          companyPhone: "",
+          faxPhone: "",
+          address: "",
+          businessType: "",
+          employeeCount: "",
+          contactPerson: "",
+          department: "",
+          position: "",
+          contact: "",
+          email: "",
+          technologyContent: "",
+        })
+      } else {
+        alert('특허 상담신청 제출 중 오류가 발생했습니다: ' + result.error)
+      }
+    } catch (error) {
+      console.error('특허 상담신청 제출 오류:', error)
+      alert('특허 상담신청 제출 중 오류가 발생했습니다.')
+    }
   }
 
   const handleInputChange = (field: string, value: string) => {
@@ -188,14 +218,6 @@ export function PatentConsultationModal({
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">사업분야</label>
-                <Input
-                  value={formData.businessType}
-                  onChange={(e) => handleInputChange("businessType", e.target.value)}
-                  placeholder="예: 센서 제조업"
-                />
-              </div>
-              <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">회사전화</label>
                 <Input
                   value={formData.companyPhone}
@@ -204,11 +226,27 @@ export function PatentConsultationModal({
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">직원 수</label>
+                <label className="text-sm font-medium text-gray-700">팩스전화</label>
+                <Input
+                  value={formData.faxPhone}
+                  onChange={(e) => handleInputChange("faxPhone", e.target.value)}
+                  placeholder="02-1234-5679"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">직원수</label>
                 <Input
                   value={formData.employeeCount}
                   onChange={(e) => handleInputChange("employeeCount", e.target.value)}
                   placeholder="예: 50명"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">사업분야</label>
+                <Input
+                  value={formData.businessType}
+                  onChange={(e) => handleInputChange("businessType", e.target.value)}
+                  placeholder="예: 소프트웨어 개발업"
                 />
               </div>
               <div className="md:col-span-2 space-y-2">

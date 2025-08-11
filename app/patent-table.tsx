@@ -142,7 +142,7 @@ export function PatentTable({ onConsultationSubmit }: PatentTableProps) {
 
       <div className="flex-col gap-6 relative hidden sm:flex">
         {/* Table (sm and up) */}
-        <div className={`transition-all duration-300 w-full ${selectedPatent && !showConsultationModal ? "lg:w-2/3" : "lg:w-full"}`}>
+        <div className="w-full">
           <div className="border rounded-lg overflow-hidden">
             <div className="overflow-x-auto">
               <Table className="min-w-[1100px] text-sm">

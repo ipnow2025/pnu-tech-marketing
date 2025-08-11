@@ -17,20 +17,180 @@ const [isAdmin, setIsAdmin] = useState(false)
 const [loginOpen, setLoginOpen] = useState(false)
 const [consultationApplications, setConsultationApplications] = useState<any[]>([])
 
+// 참가 신청 폼 상태
+const [participantForm, setParticipantForm] = useState({
+  companyName: '',
+  ceoName: '',
+  establishmentDate: '',
+  companyPhone: '',
+  companyFax: '',
+  companyAddress: '',
+  businessType: '',
+  employeeCount: '',
+  contactName: '',
+  departmentPosition: '',
+  mobilePhone: '',
+  email: ''
+})
+
+// 기술상담신청 폼 상태
+const [technologyForm, setTechnologyForm] = useState({
+  companyName: '',
+  ceoName: '',
+  establishmentDate: '',
+  companyPhone: '',
+  companyFax: '',
+  companyAddress: '',
+  businessType: '',
+  employeeCount: '',
+  contactName: '',
+  departmentPosition: '',
+  mobilePhone: '',
+  email: '',
+  desiredTechnology: '',
+  technologyRequirements: ''
+})
+
+const [isSubmitting, setIsSubmitting] = useState(false)
+const [isTechnologySubmitting, setIsTechnologySubmitting] = useState(false)
+
 useEffect(() => {
-try {
-  localStorage.removeItem('isAdmin')
-} catch {}
-setIsAdmin(false)
+  // 로그인 상태 확인
+  const checkAdminLogin = () => {
+    const loginData = localStorage.getItem('adminLogin')
+    if (!loginData) return false
+    
+    try {
+      const parsed = JSON.parse(loginData)
+      const now = new Date().getTime()
+      
+      // 만료 시간 확인
+      if (now > parsed.expiresAt) {
+        localStorage.removeItem('adminLogin')
+        return false
+      }
+      
+      return true
+    } catch {
+      localStorage.removeItem('adminLogin')
+      return false
+    }
+  }
+  
+  setIsAdmin(checkAdminLogin())
 }, [])
 
 const logout = () => {
-localStorage.removeItem('isAdmin')
-setIsAdmin(false)
+  localStorage.removeItem('adminLogin')
+  setIsAdmin(false)
 }
 
 const handleConsultationSubmit = (consultationData: any) => {
 setConsultationApplications((prev) => [...prev, consultationData])
+}
+
+// 참가 신청 제출 처리
+const handleParticipantSubmit = async () => {
+  // 필수 필드 검증
+  if (!participantForm.companyName || !participantForm.ceoName || 
+      !participantForm.contactName || !participantForm.mobilePhone || !participantForm.email) {
+    alert('필수 항목을 모두 입력해주세요.')
+    return
+  }
+
+  setIsSubmitting(true)
+  
+  try {
+    const response = await fetch('/api/participant-applications', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(participantForm),
+    })
+
+    const result = await response.json()
+
+    if (result.success) {
+      alert('참가 신청이 성공적으로 제출되었습니다!')
+      // 폼 초기화
+      setParticipantForm({
+        companyName: '',
+        ceoName: '',
+        establishmentDate: '',
+        companyPhone: '',
+        companyFax: '',
+        companyAddress: '',
+        businessType: '',
+        employeeCount: '',
+        contactName: '',
+        departmentPosition: '',
+        mobilePhone: '',
+        email: ''
+      })
+    } else {
+      alert('참가 신청 제출 중 오류가 발생했습니다: ' + result.error)
+    }
+  } catch (error) {
+    console.error('참가 신청 제출 오류:', error)
+    alert('참가 신청 제출 중 오류가 발생했습니다.')
+  } finally {
+    setIsSubmitting(false)
+  }
+}
+
+// 기술상담신청 제출 처리
+const handleTechnologySubmit = async () => {
+  // 필수 필드 검증
+  if (!technologyForm.companyName || !technologyForm.ceoName || 
+      !technologyForm.contactName || !technologyForm.mobilePhone || 
+      !technologyForm.email || !technologyForm.desiredTechnology || 
+      !technologyForm.technologyRequirements) {
+    alert('필수 항목을 모두 입력해주세요.')
+    return
+  }
+
+  setIsTechnologySubmitting(true)
+  
+  try {
+    const response = await fetch('/api/technology-consultations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(technologyForm),
+    })
+
+    const result = await response.json()
+
+    if (result.success) {
+      alert('기술상담신청이 성공적으로 제출되었습니다!')
+      // 폼 초기화
+      setTechnologyForm({
+        companyName: '',
+        ceoName: '',
+        establishmentDate: '',
+        companyPhone: '',
+        companyFax: '',
+        companyAddress: '',
+        businessType: '',
+        employeeCount: '',
+        contactName: '',
+        departmentPosition: '',
+        mobilePhone: '',
+        email: '',
+        desiredTechnology: '',
+        technologyRequirements: ''
+      })
+    } else {
+      alert('기술상담신청 제출 중 오류가 발생했습니다: ' + result.error)
+    }
+  } catch (error) {
+    console.error('기술상담신청 제출 오류:', error)
+    alert('기술상담신청 제출 중 오류가 발생했습니다.')
+  } finally {
+    setIsTechnologySubmitting(false)
+  }
 }
 
 return (
@@ -412,23 +572,69 @@ return (
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">회사명 *</label>
-                    <Input placeholder="회사명을 입력하세요" required />
+                    <Input 
+                      placeholder="회사명을 입력하세요" 
+                      required 
+                      value={participantForm.companyName}
+                      onChange={(e) => setParticipantForm(prev => ({ ...prev, companyName: e.target.value }))}
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">대표자명 *</label>
-                    <Input placeholder="대표자명을 입력하세요" required />
+                    <Input 
+                      placeholder="대표자명을 입력하세요" 
+                      required 
+                      value={participantForm.ceoName}
+                      onChange={(e) => setParticipantForm(prev => ({ ...prev, ceoName: e.target.value }))}
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">설립일</label>
-                    <Input type="date" />
+                    <Input 
+                      type="date" 
+                      value={participantForm.establishmentDate}
+                      onChange={(e) => setParticipantForm(prev => ({ ...prev, establishmentDate: e.target.value }))}
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">회사전화</label>
-                    <Input placeholder="02-1234-5678" />
+                    <Input 
+                      placeholder="02-1234-5678" 
+                      value={participantForm.companyPhone}
+                      onChange={(e) => setParticipantForm(prev => ({ ...prev, companyPhone: e.target.value }))}
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">팩스전화</label>
-                    <Input placeholder="02-1234-5679" />
+                    <Input 
+                      placeholder="02-1234-5679" 
+                      value={participantForm.companyFax}
+                      onChange={(e) => setParticipantForm(prev => ({ ...prev, companyFax: e.target.value }))}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">직원수</label>
+                    <Input 
+                      placeholder="예: 50명" 
+                      value={participantForm.employeeCount}
+                      onChange={(e) => setParticipantForm(prev => ({ ...prev, employeeCount: e.target.value }))}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">사업분야</label>
+                    <Input 
+                      placeholder="예: 소프트웨어 개발업" 
+                      value={participantForm.businessType}
+                      onChange={(e) => setParticipantForm(prev => ({ ...prev, businessType: e.target.value }))}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">주소</label>
+                    <Input 
+                      placeholder="회사 주소를 입력하세요" 
+                      value={participantForm.companyAddress}
+                      onChange={(e) => setParticipantForm(prev => ({ ...prev, companyAddress: e.target.value }))}
+                    />
                   </div>
                 </div>
               </div>
@@ -438,24 +644,50 @@ return (
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">담당자명 *</label>
-                    <Input placeholder="담당자명을 입력하세요" required />
+                    <Input 
+                      placeholder="담당자명을 입력하세요" 
+                      required 
+                      value={participantForm.contactName}
+                      onChange={(e) => setParticipantForm(prev => ({ ...prev, contactName: e.target.value }))}
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">부서(직위)</label>
-                    <Input placeholder="예: 기술개발팀 과장" />
+                    <Input 
+                      placeholder="예: 기술개발팀 과장" 
+                      value={participantForm.departmentPosition}
+                      onChange={(e) => setParticipantForm(prev => ({ ...prev, departmentPosition: e.target.value }))}
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">휴대폰번호 *</label>
-                    <Input placeholder="010-1234-5678" required />
+                    <Input 
+                      placeholder="010-1234-5678" 
+                      required 
+                      value={participantForm.mobilePhone}
+                      onChange={(e) => setParticipantForm(prev => ({ ...prev, mobilePhone: e.target.value }))}
+                    />
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700">이메일 *</label>
-                    <Input type="email" placeholder="example@company.com" required />
-                  </div>
+                                      <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">이메일 *</label>
+                      <Input 
+                        type="email" 
+                        placeholder="example@company.com" 
+                        required 
+                        value={participantForm.email}
+                        onChange={(e) => setParticipantForm(prev => ({ ...prev, email: e.target.value }))}
+                      />
+                    </div>
                 </div>
               </div>
 
-              <Button className="w-full mt-6">참가신청</Button>
+              <Button 
+                className="w-full mt-6" 
+                onClick={handleParticipantSubmit}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? '제출 중...' : '참가신청'}
+              </Button>
             </CardContent>
           </Card>
 
@@ -474,23 +706,69 @@ return (
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">회사명 *</label>
-                    <Input placeholder="회사명을 입력하세요" required />
+                    <Input 
+                      placeholder="회사명을 입력하세요" 
+                      required 
+                      value={technologyForm.companyName}
+                      onChange={(e) => setTechnologyForm(prev => ({ ...prev, companyName: e.target.value }))}
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">대표자명 *</label>
-                    <Input placeholder="대표자명을 입력하세요" required />
+                    <Input 
+                      placeholder="대표자명을 입력하세요" 
+                      required 
+                      value={technologyForm.ceoName}
+                      onChange={(e) => setTechnologyForm(prev => ({ ...prev, ceoName: e.target.value }))}
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">설립일</label>
-                    <Input type="date" />
+                    <Input 
+                      type="date" 
+                      value={technologyForm.establishmentDate}
+                      onChange={(e) => setTechnologyForm(prev => ({ ...prev, establishmentDate: e.target.value }))}
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">회사전화</label>
-                    <Input placeholder="02-1234-5678" />
+                    <Input 
+                      placeholder="02-1234-5678" 
+                      value={technologyForm.companyPhone}
+                      onChange={(e) => setTechnologyForm(prev => ({ ...prev, companyPhone: e.target.value }))}
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">팩스전화</label>
-                    <Input placeholder="02-1234-5679" />
+                    <Input 
+                      placeholder="02-1234-5679" 
+                      value={technologyForm.companyFax}
+                      onChange={(e) => setTechnologyForm(prev => ({ ...prev, companyFax: e.target.value }))}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">직원수</label>
+                    <Input 
+                      placeholder="예: 50명" 
+                      value={technologyForm.employeeCount}
+                      onChange={(e) => setTechnologyForm(prev => ({ ...prev, employeeCount: e.target.value }))}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">사업분야</label>
+                    <Input 
+                      placeholder="예: 소프트웨어 개발업" 
+                      value={technologyForm.businessType}
+                      onChange={(e) => setTechnologyForm(prev => ({ ...prev, businessType: e.target.value }))}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">주소</label>
+                    <Input 
+                      placeholder="회사 주소를 입력하세요" 
+                      value={technologyForm.companyAddress}
+                      onChange={(e) => setTechnologyForm(prev => ({ ...prev, companyAddress: e.target.value }))}
+                    />
                   </div>
                 </div>
               </div>
@@ -500,19 +778,39 @@ return (
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">담당자명 *</label>
-                    <Input placeholder="담당자명을 입력하세요" required />
+                    <Input 
+                      placeholder="담당자명을 입력하세요" 
+                      required 
+                      value={technologyForm.contactName}
+                      onChange={(e) => setTechnologyForm(prev => ({ ...prev, contactName: e.target.value }))}
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">부서(직위)</label>
-                    <Input placeholder="예: 기술개발팀 과장" />
+                    <Input 
+                      placeholder="예: 기술개발팀 과장" 
+                      value={technologyForm.departmentPosition}
+                      onChange={(e) => setTechnologyForm(prev => ({ ...prev, departmentPosition: e.target.value }))}
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">휴대폰번호 *</label>
-                    <Input placeholder="010-1234-5678" required />
+                    <Input 
+                      placeholder="010-1234-5678" 
+                      required 
+                      value={technologyForm.mobilePhone}
+                      onChange={(e) => setTechnologyForm(prev => ({ ...prev, mobilePhone: e.target.value }))}
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">이메일 *</label>
-                    <Input type="email" placeholder="example@company.com" required />
+                    <Input 
+                      type="email" 
+                      placeholder="example@company.com" 
+                      required 
+                      value={technologyForm.email}
+                      onChange={(e) => setTechnologyForm(prev => ({ ...prev, email: e.target.value }))}
+                    />
                   </div>
                 </div>
               </div>
@@ -522,7 +820,12 @@ return (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">희망기술명 *</label>
-                    <Input placeholder="상담받고 싶은 기술명을 입력하세요" required />
+                    <Input 
+                      placeholder="상담받고 싶은 기술명을 입력하세요" 
+                      required 
+                      value={technologyForm.desiredTechnology}
+                      onChange={(e) => setTechnologyForm(prev => ({ ...prev, desiredTechnology: e.target.value }))}
+                    />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">수요기술 내용 *</label>
@@ -530,12 +833,20 @@ return (
                       className="w-full min-h-[100px] px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical"
                       placeholder="기술 도입 목적, 적용 분야, 기대 효과 등을 구체적으로 작성해주세요"
                       required
+                      value={technologyForm.technologyRequirements}
+                      onChange={(e) => setTechnologyForm(prev => ({ ...prev, technologyRequirements: e.target.value }))}
                     />
                   </div>
                 </div>
               </div>
 
-              <Button className="w-full mt-6">기술상담신청</Button>
+              <Button 
+                className="w-full mt-6" 
+                onClick={handleTechnologySubmit}
+                disabled={isTechnologySubmitting}
+              >
+                {isTechnologySubmitting ? '제출 중...' : '기술상담신청'}
+              </Button>
             </CardContent>
           </Card>
         </div>
@@ -647,7 +958,7 @@ return (
           </CardContent>
         </Card>
 
-        {/* Map placeholder */}
+        {/* Map placeholder
         <Card>
           <CardHeader>
             <CardTitle>위치 지도</CardTitle>
@@ -661,7 +972,7 @@ return (
               </div>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
     )}
 
@@ -676,7 +987,6 @@ return (
     isOpen={loginOpen}
     onClose={() => setLoginOpen(false)}
     onLogin={() => {
-      localStorage.setItem('isAdmin', 'true')
       setIsAdmin(true)
     }}
   />

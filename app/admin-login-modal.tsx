@@ -24,6 +24,14 @@ export function AdminLoginModal({ isOpen, onClose, onLogin }: AdminLoginModalPro
     e.preventDefault()
     // 데모용 검증 (실서비스에서는 서버 인증 사용)
     if (credentials.username === "admin" && credentials.password === "admin123") {
+      // 로그인 정보를 localStorage에 저장 (5시간 유지)
+      const loginData = {
+        username: credentials.username,
+        loginTime: new Date().getTime(),
+        expiresAt: new Date().getTime() + (5 * 60 * 60 * 1000) // 5시간
+      }
+      localStorage.setItem('adminLogin', JSON.stringify(loginData))
+      
       onLogin()
       onClose()
       setError("")
@@ -73,6 +81,7 @@ export function AdminLoginModal({ isOpen, onClose, onLogin }: AdminLoginModalPro
           </form>
           <div className="mt-4 p-3 bg-gray-50 rounded text-sm text-gray-600">
             <p className="text-gray-700">로그인 정보는 공개되지 않습니다. 계정 문의는 관리자에게 요청하세요.</p>
+            <p className="text-gray-500 mt-1">로그인 상태는 5시간 동안 유지됩니다.</p>
           </div>
         </CardContent>
       </Card>
