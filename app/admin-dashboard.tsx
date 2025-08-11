@@ -1,0 +1,1037 @@
+"use client"
+
+import { useState } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Users, Phone, FileText, BarChart3, Clock, Search, Download, Eye, X, Building, Mail, User } from 'lucide-react'
+
+// 확장된 모의 데이터
+const mockApplications = [
+  {
+    id: 1,
+    companyName: "테크솔루션",
+    representative: "김철수",
+    contact: "010-1234-5678",
+    email: "kim@techsol.com",
+    appliedAt: "2025-01-20",
+    type: "참가신청",
+    // 추가 상세 정보
+    companyPhone: "02-1234-5678",
+    faxPhone: "02-1234-5679",
+    establishedDate: "2020-03-15",
+    department: "기술개발팀",
+    position: "팀장",
+    address: "서울시 강남구 테헤란로 123",
+    businessType: "소프트웨어 개발",
+    employeeCount: "50명",
+  },
+  {
+    id: 2,
+    companyName: "이노베이션",
+    representative: "이영희",
+    contact: "010-2345-6789",
+    email: "lee@innovation.com",
+    appliedAt: "2025-01-21",
+    type: "참가신청",
+    companyPhone: "02-2345-6789",
+    faxPhone: "02-2345-6790",
+    establishedDate: "2018-07-20",
+    department: "연구개발부",
+    position: "부장",
+    address: "부산시 해운대구 센텀로 456",
+    businessType: "바이오기술",
+    employeeCount: "120명",
+  },
+  {
+    id: 4,
+    companyName: "그린에너지",
+    representative: "정수진",
+    contact: "010-4567-8901",
+    email: "jung@greenenergy.com",
+    appliedAt: "2025-01-23",
+    type: "기술상담",
+    technology: "전기화학적 산소 발생 장치",
+    companyPhone: "052-4567-8901",
+    faxPhone: "052-4567-8902",
+    establishedDate: "2021-05-30",
+    department: "신사업개발팀",
+    position: "차장",
+    address: "울산시 남구 삼산로 789",
+    businessType: "신재생에너지",
+    employeeCount: "200명",
+    technologyContent: `수소 생산 효율성 향상을 위한 전기화학적 산소 발생 장치 기술 도입을 검토하고 있습니다.
+
+기술 도입 목적:
+- 그린 수소 생산 공정 효율성 개선
+- 에너지 소비량 최적화
+- 대용량 수소 생산 시설 구축
+
+적용 분야:
+- 수전해 수소 생산 플랜트
+- 산업용 수소 공급 시스템
+- 연료전지 발전소
+
+기대 효과:
+- 수소 생산 효율 20% 향상
+- 전력 소비량 15% 절감
+- 연간 매출 50억원 증대`,
+    applicationReason: "탄소중립 정책에 따른 그린 수소 사업 확장",
+    expectedBudget: "20억원 ~ 30억원",
+    implementationPeriod: "12개월",
+  },
+  {
+    id: 5,
+    companyName: "바이오센서텍",
+    representative: "김혜진",
+    contactPerson: "김혜진",
+    contact: "010-5678-9012",
+    email: "kim@biosensortech.com",
+    appliedAt: "2025-01-24",
+    type: "기술상담",
+    technology: "중금속 검출용 센서 및 이를 이용한 중금속 동시 검출방법",
+    companyPhone: "031-5678-9012",
+    faxPhone: "031-5678-9013",
+    establishedDate: "2022-03-15",
+    department: "기술연구소",
+    position: "연구소장",
+    address: "경기도 성남시 분당구 판교로 100",
+    businessType: "바이오센서 개발",
+    employeeCount: "35명",
+    // 특허 정보 (특허목록에서 신청한 경우)
+    patent: {
+      techField: "화학",
+      patentName: "중금속 검출용 센서 및 이를 이용한 중금속 동시 검출방법",
+      applicationNumber: "10-2013-0037530",
+      registrationNumber: "10-2075095",
+      fee: "₩5,500,000",
+      applicationDate: "2013-04-05",
+      expiryDate: "2025-02-03",
+    },
+    technologyContent: `저희는 식품 안전성 검사를 위한 휴대용 중금속 검출 장비를 개발하고 있습니다.
+
+기술 도입 목적:
+- 기존 실험실 기반 검사의 한계 극복
+- 현장에서 즉시 검사 가능한 휴대용 장비 개발
+- 다중 중금속 동시 검출로 검사 효율성 향상
+
+적용 분야:
+- 식품 안전성 검사 (농산물, 수산물)
+- 환경 모니터링 (토양, 수질)
+- 산업 현장 안전 관리
+
+기대 효과:
+- 검사 시간 대폭 단축 (기존 1-2일 → 30분 이내)
+- 검사 비용 70% 절감
+- 현장 즉시 대응으로 안전성 확보`,
+    applicationReason: "식품안전 규제 강화 및 현장 검사 수요 증가",
+    expectedBudget: "3억원 ~ 5억원",
+    implementationPeriod: "8개월",
+  },
+  {
+    id: 101,
+    companyName: "센텀아이디어랩",
+    representative: "박민수",
+    contactPerson: "박민수",
+    contact: "010-9876-5432",
+    email: "minsu.park@centumlab.co.kr",
+    appliedAt: "2025-08-02",
+    type: "기술상담",
+    origin: "exhibit",
+    companyPhone: "051-123-4567",
+    faxPhone: "",
+    establishedDate: "",
+    department: "사업개발팀",
+    position: "팀장",
+    address: "부산시 해운대구 센텀동로 45",
+    businessType: "드론 보안 솔루션",
+    employeeCount: "35명",
+    expectedBudget: "1억원 ~ 2억원",
+    implementationPeriod: "6개월",
+    exhibit: {
+      id: 201,
+      title: "드론 통신신호 분석을 이용한 드론 탐지 방법 및 장치",
+      techField: "정보/통신",
+      presenter: "김정창 교수님",
+      affiliation: "해양대학교",
+      booth: "E-01",
+    },
+    technology: "드론 통신신호 분석을 이용한 드론 탐지 방법 및 장치",
+    technologyContent:
+      "자사 드론 탐지 시스템 고도화를 위해 RF 신호 분석 기반 탐지 모듈을 검토합니다.\n주요 관심: 공항/항만 보안 적용, 장거리 탐지 성능, 장치 인증 연계.",
+  },
+  {
+    id: 102,
+    companyName: "에너지솔루션즈",
+    representative: "이서현",
+    contactPerson: "이서현",
+    contact: "010-2222-3333",
+    email: "sh.lee@energysol.io",
+    appliedAt: "2025-08-03",
+    type: "기술상담",
+    origin: "exhibit",
+    companyPhone: "02-555-1234",
+    faxPhone: "",
+    establishedDate: "",
+    department: "R&amp;D본부",
+    position: "매니저",
+    address: "서울시 강남구 테헤란로 501",
+    businessType: "ESS 연구개발",
+    employeeCount: "120명",
+    expectedBudget: "5억원",
+    implementationPeriod: "12개월",
+    exhibit: {
+      id: 204,
+      title: "유동 전지용 다공체 전극의 위치에 따른 성능 평가 시스템",
+      techField: "전기/전자",
+      presenter: "박희성 교수님",
+      affiliation: "창원대학교",
+      booth: "E-04",
+    },
+    technology: "유동 전지용 다공체 전극의 위치에 따른 성능 평가 시스템",
+    technologyContent:
+      "레독스 유동전지 모듈 성능평가 자동화 장비 도입 검토. 현장 평가 지표 정립 및 파일럿 실증 희망.",
+  },
+]
+
+// mockApplications 선언 후에 다음 코드 추가:
+const allApplications = [...mockApplications]
+
+const handleSendEmail = (application: any) => {
+  alert(`${application.companyName}(${application.email})로 이메일을 발송했습니다.`)
+}
+
+const handleExcelDownload = () => {
+  alert("엑셀 파일 다운로드를 시작합니다.")
+}
+
+// 상세 정보 모달 컴포넌트
+function ApplicationDetailModal({
+  application,
+  isOpen,
+  onClose,
+}: {
+  application: any
+  isOpen: boolean
+  onClose: () => void
+}) {
+  if (!isOpen || !application) return null
+
+  const isExhibit = application.origin === "exhibit"
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
+          <h2 className="text-xl font-bold text-gray-900">
+            {application.type === "참가신청"
+              ? "참가신청서 상세정보"
+              : isExhibit
+              ? "출품기술 상담신청서 상세정보"
+              : application.origin === "presentation"
+              ? "발표자 기술상담신청서 상세정보"
+              : "기술상담신청서 상세정보"}
+          </h2>
+          <Button variant="ghost" size="sm" onClick={onClose}>
+            <X className="w-4 h-4" />
+          </Button>
+        </div>
+
+        <div className="p-6 space-y-6">
+          {/* 신청 기본 정보 */}
+          <div className="bg-gray-50 rounded-lg p-4">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="text-lg font-semibold">신청 #{application.id}</div>
+              </div>
+              <div className="text-sm text-gray-500">신청일: {application.appliedAt}</div>
+            </div>
+          </div>
+
+          {/* 회사 정보 */}
+          <div className="border rounded-lg p-4">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <Building className="w-5 h-5 text-blue-600" />
+              회사 정보
+            </h3>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-3">
+                <div>
+                  <label className="text-sm font-medium text-gray-500">회사명</label>
+                  <p className="text-sm font-semibold">{application.companyName}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">대표자명</label>
+                  <p className="text-sm">{application.representative}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">설립일</label>
+                  <p className="text-sm">{application.establishedDate}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">사업분야</label>
+                  <p className="text-sm">{application.businessType}</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <label className="text-sm font-medium text-gray-500">회사전화</label>
+                  <p className="text-sm">{application.companyPhone}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">팩스</label>
+                  <p className="text-sm">{application.faxPhone}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">직원 수</label>
+                  <p className="text-sm">{application.employeeCount}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">주소</label>
+                  <p className="text-sm">{application.address}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 담당자 정보 */}
+          <div className="border rounded-lg p-4">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <User className="w-5 h-5 text-green-600" />
+              담당자 정보
+            </h3>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-3">
+                <div>
+                  <label className="text-sm font-medium text-gray-500">담당자명</label>
+                  <p className="text-sm font-semibold">{application.contactPerson || application.representative}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">부서</label>
+                  <p className="text-sm">{application.department}</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <label className="text-sm font-medium text-gray-500">직위</label>
+                  <p className="text-sm">{application.position}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">연락처</label>
+                  <p className="text-sm">{application.contact}</p>
+                </div>
+              </div>
+              <div className="md:col-span-2">
+                <label className="text-sm font-medium text-gray-500">이메일</label>
+                <p className="text-sm">{application.email}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* 발표 정보 (발표 상담) */}
+          {application.presentation && (
+            <div className="border rounded-lg p-4 bg-indigo-50">
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-indigo-900">
+                <FileText className="w-5 h-5" />
+                발표 정보
+              </h3>
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <label className="font-medium text-gray-600">발표명</label>
+                  <p className="text-indigo-700 font-semibold">{application.presentation.title}</p>
+                </div>
+                <div>
+                  <label className="font-medium text-gray-600">기술분야</label>
+                  <p>{application.presentation.techField}</p>
+                </div>
+                <div>
+                  <label className="font-medium text-gray-600">발표자</label>
+                  <p>{application.presentation.presenter}</p>
+                </div>
+                <div>
+                  <label className="font-medium text-gray-600">소속</label>
+                  <p>{application.presentation.affiliation}</p>
+                </div>
+                <div>
+                  <label className="font-medium text-gray-600">시간</label>
+                  <p>{application.presentation.time}</p>
+                </div>
+                <div>
+                  <label className="font-medium text-gray-600">장소</label>
+                  <p>{application.presentation.room}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 출품 정보 (출품 상담) */}
+          {application.exhibit && (
+            <div className="border rounded-lg p-4 bg-emerald-50">
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-emerald-900">
+                <FileText className="w-5 h-5" />
+                출품 정보
+              </h3>
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <label className="font-medium text-gray-600">출품명</label>
+                  <p className="text-emerald-700 font-semibold">{application.exhibit.title}</p>
+                </div>
+                <div>
+                  <label className="font-medium text-gray-600">기술분야</label>
+                  <p>{application.exhibit.techField}</p>
+                </div>
+                <div>
+                  <label className="font-medium text-gray-600">담당</label>
+                  <p>{application.exhibit.presenter}</p>
+                </div>
+                <div>
+                  <label className="font-medium text-gray-600">소속</label>
+                  <p>{application.exhibit.affiliation}</p>
+                </div>
+                <div>
+                  <label className="font-medium text-gray-600">부스</label>
+                  <p>{application.exhibit.booth}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 특허 정보 (특허 기반 상담) */}
+          {application.patent && (
+            <div className="border rounded-lg p-4 bg-blue-50">
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-blue-800">
+                <FileText className="w-5 h-5" />
+                관련 특허 정보
+              </h3>
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <label className="font-medium text-gray-600">특허명</label>
+                  <p className="text-blue-700 font-semibold">{application.patent.patentName}</p>
+                </div>
+                <div>
+                  <label className="font-medium text-gray-600">기술분야</label>
+                  <p>{application.patent.techField}</p>
+                </div>
+                <div>
+                  <label className="font-medium text-gray-600">출원번호</label>
+                  <p className="font-mono">{application.patent.applicationNumber}</p>
+                </div>
+                <div>
+                  <label className="font-medium text-gray-600">등록번호</label>
+                  <p className="font-mono">{application.patent.registrationNumber}</p>
+                </div>
+                <div>
+                  <label className="font-medium text-gray-600">기술료</label>
+                  <p className="text-green-600 font-semibold">{application.patent.fee}</p>
+                </div>
+                <div>
+                  <label className="font-medium text-gray-600">만료일</label>
+                  <p>{application.patent.expiryDate}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 기술상담 내용 (공통) */}
+          {application.type === "기술상담" && (
+            <div className="border rounded-lg p-4">
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <FileText className="w-5 h-5 text-purple-600" />
+                기술상담 정보
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-500">희망기술명</label>
+                  <p className="text-sm font-semibold text-blue-600">{application.technology}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">수요기술 내용</label>
+                  <div className="text-sm bg-gray-50 p-3 rounded border whitespace-pre-line">
+                    {application.technologyContent}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 액션 버튼 */}
+          <div className="flex justify-end gap-3 pt-4 border-t">
+            <Button variant="outline" onClick={onClose}>
+              닫기
+            </Button>
+            <Button variant="outline" onClick={() => handleSendEmail(application)}>
+              <Mail className="w-4 h-4 mr-2" />
+              이메일 발송
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+interface AdminDashboardProps {
+  consultationApplications?: any[]
+}
+
+export default function AdminDashboard({ consultationApplications = [] }: AdminDashboardProps) {
+  const [activeAdminTab, setActiveAdminTab] = useState("dashboard")
+  const [searchTerm, setSearchTerm] = useState("")
+  const [selectedApplication, setSelectedApplication] = useState<any>(null)
+  const [showDetailModal, setShowDetailModal] = useState(false)
+
+  const allApplications = [...mockApplications, ...consultationApplications]
+
+  const filteredApplications = allApplications.filter(
+    (app) =>
+      app.companyName?.toLowerCase?.().includes(searchTerm.toLowerCase()) ||
+      app.representative?.toLowerCase?.().includes(searchTerm.toLowerCase()) ||
+      (app.contactPerson && app.contactPerson.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (app.exhibit?.title && app.exhibit.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (app.presentation?.title && app.presentation.title.toLowerCase().includes(searchTerm.toLowerCase())),
+  )
+
+  const handleViewDetail = (application: any) => {
+    setSelectedApplication(application)
+    setShowDetailModal(true)
+  }
+
+  const exhibitConsultations = filteredApplications.filter((app) => app.origin === "exhibit")
+  const presentationConsultations = filteredApplications.filter((app) => app.origin === "presentation")
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-3xl font-bold">관리자 대시보드</h2>
+        <div className="text-sm text-gray-500">마지막 업데이트: {new Date().toLocaleString("ko-KR")}</div>
+      </div>
+
+      {/* 관리자 탭 네비게이션 */}
+      <div className="border-b">
+        <nav className="flex space-x-8">
+          {[
+            { id: "dashboard", label: "대시보드", icon: BarChart3 },
+            { id: "exhibit-management", label: "출품기술 기업관리", icon: Building },
+            { id: "patent-consultations", label: "특허목록 상담신청", icon: FileText },
+            { id: "applications", label: "참가신청관리", icon: Users },
+            { id: "consultations", label: "기술상담관리", icon: Phone },
+          ].map((tab) => {
+            const Icon = tab.icon
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveAdminTab(tab.id)}
+                className={`flex items-center gap-2 py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                  activeAdminTab === tab.id
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {tab.label}
+              </button>
+            )
+          })}
+        </nav>
+      </div>
+
+      {/* 대시보드 탭 */}
+      {activeAdminTab === "dashboard" && (
+        <div className="space-y-6">
+          {/* 통계 카드 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">총 참가신청</p>
+                    <p className="text-2xl font-bold text-gray-900">24</p>
+                  </div>
+                  <Users className="w-8 h-8 text-blue-600" />
+                </div>
+                <div className="mt-2 text-sm text-green-600">+12% 전일 대비</div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">기술상담신청</p>
+                    <p className="text-2xl font-bold text-gray-900">15</p>
+                  </div>
+                  <Phone className="w-8 h-8 text-green-600" />
+                </div>
+                <div className="mt-2 text-sm text-green-600">일반 상담신청</div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">특허목록 상담</p>
+                    <p className="text-2xl font-bold text-gray-900">3</p>
+                  </div>
+                  <FileText className="w-8 h-8 text-purple-600" />
+                </div>
+                <div className="mt-2 text-sm text-blue-600">특허 기반 상담</div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">총 신청</p>
+                    <p className="text-2xl font-bold text-gray-900">42</p>
+                  </div>
+                  <FileText className="w-8 h-8 text-purple-600" />
+                </div>
+                <div className="mt-2 text-sm text-blue-600">전체 신청 현황</div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">이번 주 신청</p>
+                    <p className="text-2xl font-bold text-gray-900">8</p>
+                  </div>
+                  <Clock className="w-8 h-8 text-orange-600" />
+                </div>
+                <div className="mt-2 text-sm text-green-600">+25% 지난주 대비</div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* 최근 활동 */}
+          <div className="grid lg:grid-cols-3 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>최근 참가신청</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {mockApplications.slice(0, 5).map((app) => (
+                    <div key={app.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <div className="font-medium">{app.companyName}</div>
+                        <div className="text-sm text-gray-600">{app.representative}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xs text-gray-500">{app.appliedAt}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>기술분야별 상담신청</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {[
+                    { field: "정보/통신", count: 8, color: "bg-blue-500" },
+                    { field: "화학", count: 6, color: "bg-green-500" },
+                    { field: "전기/전자", count: 4, color: "bg-purple-500" },
+                    { field: "기계", count: 3, color: "bg-orange-500" },
+                    { field: "재료", count: 2, color: "bg-red-500" },
+                  ].map((item) => (
+                    <div key={item.field} className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-3 h-3 rounded-full ${item.color}`}></div>
+                        <span className="text-sm font-medium">{item.field}</span>
+                      </div>
+                      <span className="text-sm text-gray-600">{item.count}건</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>출품기술 상담신청</CardTitle>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-transparent"
+                  onClick={() => setActiveAdminTab("exhibit-management")}
+                >
+                  전체 보기
+                </Button>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {exhibitConsultations.slice(0, 5).map((app) => (
+                    <div
+                      key={app.id}
+                      className="flex items-center justify-between p-3 bg-emerald-50 rounded-lg border border-emerald-100"
+                    >
+                      <div className="min-w-0">
+                        <div className="font-medium text-emerald-900 truncate">{app.companyName}</div>
+                        <div className="text-xs text-emerald-700 truncate" title={app.exhibit?.title || app.technology}>
+                          {app.exhibit?.title || app.technology}
+                        </div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <div className="text-xs text-gray-500">{app.appliedAt}</div>
+                        <div className="mt-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="bg-white"
+                            onClick={() => {
+                              setSelectedApplication(app)
+                              setShowDetailModal(true)
+                            }}
+                          >
+                            상세
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {exhibitConsultations.length === 0 && (
+                    <div className="text-sm text-gray-500 text-center py-6">출품기술 목록에서 신청된 상담이 없습니다.</div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )}
+
+      {/* 참가신청 관리 탭 */}
+      {activeAdminTab === "applications" && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-semibold">참가신청관리</h3>
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <Input
+                  placeholder="회사명 또는 대표자명 검색"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pr-10 w-64"
+                />
+                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              </div>
+              <Button variant="outline" className="flex items-center gap-2 bg-transparent" onClick={handleExcelDownload}>
+                <Download className="w-4 h-4" />
+                엑셀 다운로드
+              </Button>
+            </div>
+          </div>
+
+          <Card>
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>번호</TableHead>
+                    <TableHead>회사명</TableHead>
+                    <TableHead>대표자</TableHead>
+                    <TableHead>연락처</TableHead>
+                    <TableHead>이메일</TableHead>
+                    <TableHead>신청일</TableHead>
+                    <TableHead>관리</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredApplications
+                    .filter((app) => app.type === "참가신청")
+                    .map((app, index) => (
+                      <TableRow key={app.id} className="hover:bg-gray-50">
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell className="font-medium">{app.companyName}</TableCell>
+                        <TableCell>{app.representative}</TableCell>
+                        <TableCell>{app.contact}</TableCell>
+                        <TableCell>{app.email}</TableCell>
+                        <TableCell>{app.appliedAt}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Button size="sm" variant="outline" onClick={() => handleViewDetail(app)}>
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* 기술상담 관리 탭 (일반, 특허 제외) */}
+      {activeAdminTab === "consultations" && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-semibold">기술상담관리</h3>
+            <Button variant="outline" className="flex items-center gap-2 bg-transparent" onClick={handleExcelDownload}>
+              <Download className="w-4 h-4" />
+              상담 현황 다운로드
+            </Button>
+          </div>
+
+          <Card>
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>번호</TableHead>
+                    <TableHead>회사명</TableHead>
+                    <TableHead>담당자</TableHead>
+                    <TableHead>희망기술</TableHead>
+                    <TableHead>신청일</TableHead>
+                    <TableHead>관리</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredApplications
+                    .filter((app) => app.type === "기술상담" && !app.patent && app.origin !== "exhibit" && app.origin !== "presentation")
+                    .map((app, index) => (
+                      <TableRow key={app.id} className="hover:bg-gray-50">
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell className="font-medium">{app.companyName}</TableCell>
+                        <TableCell>{app.representative}</TableCell>
+                        <TableCell className="max-w-xs truncate" title={app.technology}>
+                          {app.technology}
+                        </TableCell>
+                        <TableCell>{app.appliedAt}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Button size="sm" variant="outline" onClick={() => handleViewDetail(app)}>
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* 특허목록 상담신청 관리 탭 */}
+      {activeAdminTab === "patent-consultations" && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-semibold">특허목록 상담신청</h3>
+            <Button variant="outline" className="flex items-center gap-2 bg-transparent" onClick={handleExcelDownload}>
+              <Download className="w-4 h-4" />
+              특허상담 현황 다운로드
+            </Button>
+          </div>
+
+          <Card>
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>번호</TableHead>
+                    <TableHead>회사명</TableHead>
+                    <TableHead>담당자</TableHead>
+                    <TableHead>특허명</TableHead>
+                    <TableHead>기술분야</TableHead>
+                    <TableHead>기술료</TableHead>
+                    <TableHead>신청일</TableHead>
+                    <TableHead>관리</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredApplications
+                    .filter((app) => app.type === "기술상담" && app.patent && app.origin !== "exhibit" && app.origin !== "presentation")
+                    .map((app, index) => (
+                      <TableRow key={app.id} className="hover:bg-gray-50">
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell className="font-medium">{app.companyName}</TableCell>
+                        <TableCell>{app.contactPerson || app.representative}</TableCell>
+                        <TableCell className="max-w-xs truncate" title={app.patent?.patentName}>
+                          {app.patent?.patentName}
+                        </TableCell>
+                        <TableCell>
+                          <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                            {app.patent?.techField}
+                          </span>
+                        </TableCell>
+                        <TableCell className="font-semibold text-green-600">{app.patent?.fee}</TableCell>
+                        <TableCell>{app.appliedAt}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Button size="sm" variant="outline" onClick={() => handleViewDetail(app)}>
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  {filteredApplications.filter(
+                    (app) => app.type === "기술상담" && app.patent && app.origin !== "exhibit" && app.origin !== "presentation",
+                  ).length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={8} className="h-24 text-center text-gray-500">
+                        특허목록에서 신청된 상담이 없습니다.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* 출품기술 관리 탭: 발표/출품을 한 페이지에서 분리 표시 */}
+      {activeAdminTab === "exhibit-management" && (
+        <div className="space-y-8">
+          {/* 공통 검색/액션 */}
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-semibold">출품기술 기업관리</h3>
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <Input
+                  placeholder="회사명/담당자/출품명/발표명 검색"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pr-10 w-80"
+                />
+                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              </div>
+              <Button variant="outline" className="flex items-center gap-2 bg-transparent" onClick={handleExcelDownload}>
+                <Download className="w-4 h-4" />
+                엑셀 다운로드
+              </Button>
+            </div>
+          </div>
+
+          {/* 발표자 기술목록 상담신청 리스트 */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span>발표자 기술목록 상담신청</span>
+                <span className="text-sm font-normal text-gray-500">{presentationConsultations.length}건</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>번호</TableHead>
+                    <TableHead>회사명</TableHead>
+                    <TableHead>담당자</TableHead>
+                    <TableHead>발표명</TableHead>
+                    <TableHead>시간</TableHead>
+                    <TableHead>신청일</TableHead>
+                    <TableHead>관리</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {presentationConsultations.map((app, index) => (
+                    <TableRow key={app.id} className="hover:bg-gray-50">
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell className="font-medium">{app.companyName}</TableCell>
+                      <TableCell>{app.contactPerson || app.representative}</TableCell>
+                      <TableCell className="max-w-xs truncate" title={app.presentation?.title || app.technology}>
+                        {app.presentation?.title || app.technology}
+                      </TableCell>
+                      <TableCell>{app.presentation?.time || "-"}</TableCell>
+                      <TableCell>{app.appliedAt}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Button size="sm" variant="outline" onClick={() => handleViewDetail(app)}>
+                            <Eye className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {presentationConsultations.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={7} className="h-24 text-center text-gray-500">
+                        발표자 기술목록에서 신청된 상담이 없습니다.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+
+          {/* 출품기술 상담신청 리스트 */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span>출품기술 상담신청</span>
+                <span className="text-sm font-normal text-gray-500">{exhibitConsultations.length}건</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>번호</TableHead>
+                    <TableHead>회사명</TableHead>
+                    <TableHead>담당자</TableHead>
+                    <TableHead>출품명</TableHead>
+                    <TableHead>기술분야</TableHead>
+                    <TableHead>신청일</TableHead>
+                    <TableHead>관리</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {exhibitConsultations.map((app, index) => (
+                    <TableRow key={app.id} className="hover:bg-gray-50">
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell className="font-medium">{app.companyName}</TableCell>
+                      <TableCell>{app.contactPerson || app.representative}</TableCell>
+                      <TableCell className="max-w-xs truncate" title={app.exhibit?.title || app.technology}>
+                        {app.exhibit?.title || app.technology}
+                      </TableCell>
+                      <TableCell>
+                        <span className="inline-block px-2 py-1 bg-emerald-100 text-emerald-800 text-xs font-medium rounded-full">
+                          {app.exhibit?.techField}
+                        </span>
+                      </TableCell>
+                      <TableCell>{app.appliedAt}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Button size="sm" variant="outline" onClick={() => handleViewDetail(app)}>
+                            <Eye className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {exhibitConsultations.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={7} className="h-24 text-center text-gray-500">
+                        출품기술 목록에서 신청된 상담이 없습니다.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* 상세 정보 모달 */}
+      <ApplicationDetailModal
+        application={selectedApplication}
+        isOpen={showDetailModal}
+        onClose={() => setShowDetailModal(false)}
+      />
+    </div>
+  )
+}
