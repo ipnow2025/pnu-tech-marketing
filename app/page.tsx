@@ -593,7 +593,24 @@ return (
                     <Input 
                       type="date" 
                       value={participantForm.establishmentDate}
-                      onChange={(e) => setParticipantForm(prev => ({ ...prev, establishmentDate: e.target.value }))}
+                      onChange={(e) => {
+                        const selectedDate = new Date(e.target.value)
+                        const minDate = new Date('1800-01-01')
+                        const maxDate = new Date('2099-12-31')
+                        
+                        if (selectedDate < minDate) {
+                          alert('설립일은 1800년 1월 1일 이후로 입력해주세요.')
+                          return
+                        }
+                        if (selectedDate > maxDate) {
+                          alert('설립일은 2099년 12월 31일 이전으로 입력해주세요.')
+                          return
+                        }
+                        
+                        setParticipantForm(prev => ({ ...prev, establishmentDate: e.target.value }))
+                      }}
+                      min="1800-01-01"
+                      max="2099-12-31"
                     />
                   </div>
                   <div className="space-y-2">
@@ -727,7 +744,24 @@ return (
                     <Input 
                       type="date" 
                       value={technologyForm.establishmentDate}
-                      onChange={(e) => setTechnologyForm(prev => ({ ...prev, establishmentDate: e.target.value }))}
+                      onChange={(e) => {
+                        const selectedDate = new Date(e.target.value)
+                        const minDate = new Date('1800-01-01')
+                        const maxDate = new Date('2099-12-31')
+                        
+                        if (selectedDate < minDate) {
+                          alert('설립일은 1800년 1월 1일 이후로 입력해주세요.')
+                          return
+                        }
+                        if (selectedDate > maxDate) {
+                          alert('설립일은 2099년 12월 31일 이전으로 입력해주세요.')
+                          return
+                        }
+                        
+                        setTechnologyForm(prev => ({ ...prev, establishmentDate: e.target.value }))
+                      }}
+                      min="1800-01-01"
+                      max="2099-12-31"
                     />
                   </div>
                   <div className="space-y-2">

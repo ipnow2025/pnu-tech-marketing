@@ -15,6 +15,26 @@ interface PatentConsultationModalProps {
   patent: Patent | null
   // 특허가 아닐 때(발표 등) 선택 항목의 제목을 전달 (예: 발표 제목)
   selectionTitle?: string
+  // 발표자 정보 (발표 상담일 경우)
+  presentation?: {
+    id: number
+    title: string
+    techField: string
+    presenter: string
+    affiliation: string
+    time?: string
+    room?: string
+  } | null
+  // 출품 기술 정보 (출품 상담일 경우)
+  exhibit?: {
+    id: number
+    title: string
+    techField: string
+    presenter: string
+    affiliation: string
+    booth?: string
+    applicationNumber?: string
+  } | null
   onSubmit: (consultationData: any) => void
 }
 
@@ -24,6 +44,8 @@ export function PatentConsultationModal({
   patent,
   onSubmit,
   selectionTitle,
+  presentation,
+  exhibit,
 }: PatentConsultationModalProps) {
   const [formData, setFormData] = useState({
     // 회사 정보
@@ -61,39 +83,111 @@ export function PatentConsultationModal({
     }
 
     try {
-      // API 호출을 위한 데이터 준비
-      const consultationData = {
-        // 특허 정보
-        patentTechField: patent?.techField || null,
-        patentName: patent?.patentName || null,
-        patentApplicationNumber: patent?.applicationNumber || null,
-        patentRegistrationNumber: patent?.registrationNumber || null,
-        patentFee: patent?.fee || null,
-        patentApplicationDate: patent?.applicationDate || null,
-        patentExpiryDate: patent?.expiryDate || null,
-        
-        // 회사 정보
-        companyName: formData.companyName,
-        representativeName: formData.representative,
-        establishedDate: formData.establishedDate,
-        companyPhone: formData.companyPhone,
-        faxPhone: formData.faxPhone,
-        companyAddress: formData.address,
-        businessType: formData.businessType,
-        employeeCount: formData.employeeCount,
-        
-        // 담당자 정보
-        contactPerson: formData.contactPerson,
-        department: formData.department,
-        position: formData.position,
-        mobilePhone: formData.contact,
-        email: formData.email,
-        
-        // 상담 내용
-        technologyContent: formData.technologyContent
+      let apiEndpoint = ''
+      let consultationData = {}
+
+      // 상담 유형에 따라 API 엔드포인트와 데이터 구조 결정
+      if (presentation) {
+        // 발표자 상담신청
+        apiEndpoint = '/api/presentation-consultations'
+        consultationData = {
+          // 발표 정보
+          presentationId: presentation.id,
+          presentationTitle: presentation.title,
+          presentationTechField: presentation.techField,
+          presentationPresenter: presentation.presenter,
+          presentationAffiliation: presentation.affiliation,
+          presentationTime: presentation.time,
+          presentationRoom: presentation.room,
+          
+          // 회사 정보
+          companyName: formData.companyName,
+          representativeName: formData.representative,
+          establishedDate: formData.establishedDate,
+          companyPhone: formData.companyPhone,
+          faxPhone: formData.faxPhone,
+          companyAddress: formData.address,
+          businessType: formData.businessType,
+          employeeCount: formData.employeeCount,
+          
+          // 담당자 정보
+          contactPerson: formData.contactPerson,
+          department: formData.department,
+          position: formData.position,
+          mobilePhone: formData.contact,
+          email: formData.email,
+          
+          // 상담 내용
+          technologyContent: formData.technologyContent
+        }
+      } else if (exhibit) {
+        // 출품 기술 상담신청
+        apiEndpoint = '/api/exhibit-consultations'
+        consultationData = {
+          // 출품 정보
+          exhibitId: exhibit.id,
+          exhibitTitle: exhibit.title,
+          exhibitTechField: exhibit.techField,
+          exhibitPresenter: exhibit.presenter,
+          exhibitAffiliation: exhibit.affiliation,
+          exhibitBooth: exhibit.booth,
+          
+          // 회사 정보
+          companyName: formData.companyName,
+          representativeName: formData.representative,
+          establishedDate: formData.establishedDate,
+          companyPhone: formData.companyPhone,
+          faxPhone: formData.faxPhone,
+          companyAddress: formData.address,
+          businessType: formData.businessType,
+          employeeCount: formData.employeeCount,
+          
+          // 담당자 정보
+          contactPerson: formData.contactPerson,
+          department: formData.department,
+          position: formData.position,
+          mobilePhone: formData.contact,
+          email: formData.email,
+          
+          // 상담 내용
+          technologyContent: formData.technologyContent
+        }
+      } else if (patent) {
+        // 특허 상담신청
+        apiEndpoint = '/api/patent-consultations'
+        consultationData = {
+          // 특허 정보
+          patentTechField: patent.techField || null,
+          patentName: patent.patentName || null,
+          patentApplicationNumber: patent.applicationNumber || null,
+          patentRegistrationNumber: patent.registrationNumber || null,
+          patentFee: patent.fee || null,
+          patentApplicationDate: patent.applicationDate || null,
+          patentExpiryDate: patent.expiryDate || null,
+          
+          // 회사 정보
+          companyName: formData.companyName,
+          representativeName: formData.representative,
+          establishedDate: formData.establishedDate,
+          companyPhone: formData.companyPhone,
+          faxPhone: formData.faxPhone,
+          companyAddress: formData.address,
+          businessType: formData.businessType,
+          employeeCount: formData.employeeCount,
+          
+          // 담당자 정보
+          contactPerson: formData.contactPerson,
+          department: formData.department,
+          position: formData.position,
+          mobilePhone: formData.contact,
+          email: formData.email,
+          
+          // 상담 내용
+          technologyContent: formData.technologyContent
+        }
       }
 
-      const response = await fetch('/api/patent-consultations', {
+      const response = await fetch(apiEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -104,7 +198,8 @@ export function PatentConsultationModal({
       const result = await response.json()
 
       if (result.success) {
-        alert('특허 상담신청이 성공적으로 제출되었습니다!')
+        const typeText = presentation ? '발표자 상담신청' : exhibit ? '출품 기술 상담신청' : '특허 상담신청'
+        alert(`${typeText}이 성공적으로 제출되었습니다!`)
         onClose()
         
         // 폼 초기화
@@ -125,11 +220,11 @@ export function PatentConsultationModal({
           technologyContent: "",
         })
       } else {
-        alert('특허 상담신청 제출 중 오류가 발생했습니다: ' + result.error)
+        alert(`상담신청 제출에 실패했습니다: ${result.error}`)
       }
     } catch (error) {
-      console.error('특허 상담신청 제출 오류:', error)
-      alert('특허 상담신청 제출 중 오류가 발생했습니다.')
+      console.error('상담신청 제출 오류:', error)
+      alert('상담신청 제출 중 오류가 발생했습니다.')
     }
   }
 
@@ -148,38 +243,78 @@ export function PatentConsultationModal({
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          {/* 선택 정보: 특허가 있을 때만 표시 */}
-          {patent && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-blue-800">
+
+
+          {/* 발표자 정보: 발표 상담일 때만 표시 */}
+          {presentation && (
+            <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-indigo-800">
                 <FileText className="w-5 h-5" />
-                선택된 특허 정보
+                선택된 발표 정보
               </h3>
               <div className="grid md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <label className="font-medium text-gray-600">특허명</label>
-                  <p className="text-blue-700 font-semibold">{patent.patentName}</p>
+                  <label className="font-medium text-gray-600">발표명</label>
+                  <p className="text-indigo-700 font-semibold">{presentation.title}</p>
                 </div>
                 <div>
                   <label className="font-medium text-gray-600">기술분야</label>
-                  <p>{patent.techField}</p>
+                  <p>{presentation.techField}</p>
                 </div>
                 <div>
-                  <label className="font-medium text-gray-600">출원번호</label>
-                  <p className="font-mono">{patent.applicationNumber}</p>
+                  <label className="font-medium text-gray-600">발표자</label>
+                  <p>{presentation.presenter}</p>
                 </div>
                 <div>
-                  <label className="font-medium text-gray-600">등록번호</label>
-                  <p className="font-mono">{patent.registrationNumber}</p>
+                  <label className="font-medium text-gray-600">소속</label>
+                  <p>{presentation.affiliation}</p>
+                </div>
+                {presentation.time && (
+                  <div>
+                    <label className="font-medium text-gray-600">발표시간</label>
+                    <p>{presentation.time}</p>
+                  </div>
+                )}
+                {presentation.room && (
+                  <div>
+                    <label className="font-medium text-gray-600">발표장소</label>
+                    <p>{presentation.room}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* 출품 기술 정보: 출품 상담일 때만 표시 */}
+          {exhibit && (
+            <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-emerald-800">
+                <FileText className="w-5 h-5" />
+                선택된 출품 기술 정보
+              </h3>
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <label className="font-medium text-gray-600">출품명</label>
+                  <p className="text-emerald-700 font-semibold">{exhibit.title}</p>
                 </div>
                 <div>
-                  <label className="font-medium text-gray-600">기술료</label>
-                  <p className="text-green-600 font-semibold">{patent.fee}</p>
+                  <label className="font-medium text-gray-600">기술분야</label>
+                  <p>{exhibit.techField}</p>
                 </div>
                 <div>
-                  <label className="font-medium text-gray-600">만료일</label>
-                  <p>{patent.expiryDate}</p>
+                  <label className="font-medium text-gray-600">담당</label>
+                  <p>{exhibit.presenter}</p>
                 </div>
+                <div>
+                  <label className="font-medium text-gray-600">소속</label>
+                  <p>{exhibit.affiliation}</p>
+                </div>
+                {exhibit.booth && (
+                  <div>
+                    <label className="font-medium text-gray-600">부스</label>
+                    <p>{exhibit.booth}</p>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -214,7 +349,24 @@ export function PatentConsultationModal({
                 <Input
                   type="date"
                   value={formData.establishedDate}
-                  onChange={(e) => handleInputChange("establishedDate", e.target.value)}
+                  onChange={(e) => {
+                    const selectedDate = new Date(e.target.value)
+                    const minDate = new Date('1800-01-01')
+                    const maxDate = new Date('2099-12-31')
+                    
+                    if (selectedDate < minDate) {
+                      alert('설립일은 1800년 1월 1일 이후로 입력해주세요.')
+                      return
+                    }
+                    if (selectedDate > maxDate) {
+                      alert('설립일은 2099년 12월 31일 이전으로 입력해주세요.')
+                      return
+                    }
+                    
+                    handleInputChange("establishedDate", e.target.value)
+                  }}
+                  min="1800-01-01"
+                  max="2099-12-31"
                 />
               </div>
               <div className="space-y-2">
@@ -249,7 +401,7 @@ export function PatentConsultationModal({
                   placeholder="예: 소프트웨어 개발업"
                 />
               </div>
-              <div className="md:col-span-2 space-y-2">
+              <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">주소</label>
                 <Input
                   value={formData.address}

@@ -125,3 +125,116 @@ CREATE TABLE IF NOT EXISTS `pnu_techfair_patent_consultations` (
   INDEX `idx_created_at` (`created_at`),
   INDEX `idx_is_deleted` (`is_deleted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='특허 상담신청 정보';
+
+-- 발표자 상담신청 테이블 생성
+CREATE TABLE IF NOT EXISTS `pnu_techfair_presentation_consultations` (
+  `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '발표자 상담신청 ID',
+  
+  -- 발표 정보 (선택된 발표)
+  `presentation_id` INT NOT NULL COMMENT '발표 ID',
+  `presentation_title` VARCHAR(500) NOT NULL COMMENT '발표명',
+  `presentation_tech_field` VARCHAR(100) NOT NULL COMMENT '발표 기술분야',
+  `presentation_presenter` VARCHAR(100) NOT NULL COMMENT '발표자',
+  `presentation_affiliation` VARCHAR(255) NOT NULL COMMENT '발표자 소속',
+  `presentation_time` VARCHAR(50) NULL COMMENT '발표시간',
+  `presentation_room` VARCHAR(100) NULL COMMENT '발표장소',
+  
+  -- 회사 정보
+  `company_name` VARCHAR(255) NOT NULL COMMENT '회사명',
+  `representative_name` VARCHAR(100) NOT NULL COMMENT '대표자명',
+  `established_date` DATE NULL COMMENT '설립일',
+  `company_phone` VARCHAR(20) NULL COMMENT '회사전화',
+  `fax_phone` VARCHAR(20) NULL COMMENT '팩스전화',
+  `company_address` TEXT NULL COMMENT '회사주소',
+  `business_type` VARCHAR(255) NULL COMMENT '사업분야',
+  `employee_count` VARCHAR(50) NULL COMMENT '직원수',
+  
+  -- 담당자 정보
+  `contact_person` VARCHAR(100) NOT NULL COMMENT '담당자명',
+  `department` VARCHAR(100) NULL COMMENT '부서',
+  `position` VARCHAR(100) NULL COMMENT '직위',
+  `mobile_phone` VARCHAR(20) NOT NULL COMMENT '휴대폰번호',
+  `email` VARCHAR(255) NOT NULL COMMENT '이메일',
+  
+  -- 상담 내용
+  `technology_content` TEXT NOT NULL COMMENT '기술 도입 목적 및 적용 분야',
+  
+  -- 상담 상태
+  `consultation_type` VARCHAR(50) DEFAULT '발표상담' COMMENT '상담유형',
+  `status` VARCHAR(20) DEFAULT '대기' COMMENT '상담상태',
+  `applied_at` DATE NOT NULL COMMENT '신청일자',
+  
+  -- 기본 필드
+  `is_deleted` BOOLEAN DEFAULT FALSE COMMENT '삭제 여부',
+  `deleted_at` TIMESTAMP NULL COMMENT '삭제 시간',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '생성 시간',
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 시간',
+  
+  -- 인덱스
+  INDEX `idx_presentation_id` (`presentation_id`),
+  INDEX `idx_presentation_title` (`presentation_title`),
+  INDEX `idx_presentation_presenter` (`presentation_presenter`),
+  INDEX `idx_company_name` (`company_name`),
+  INDEX `idx_contact_person` (`contact_person`),
+  INDEX `idx_email` (`email`),
+  INDEX `idx_status` (`status`),
+  INDEX `idx_applied_at` (`applied_at`),
+  INDEX `idx_created_at` (`created_at`),
+  INDEX `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='발표자 상담신청 정보';
+
+-- 출품 기술 상담신청 테이블 생성
+CREATE TABLE IF NOT EXISTS `pnu_techfair_exhibit_consultations` (
+  `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '출품 기술 상담신청 ID',
+  
+  -- 출품 기술 정보 (선택된 출품)
+  `exhibit_id` INT NOT NULL COMMENT '출품 ID',
+  `exhibit_title` VARCHAR(500) NOT NULL COMMENT '출품명',
+  `exhibit_tech_field` VARCHAR(100) NOT NULL COMMENT '출품 기술분야',
+  `exhibit_presenter` VARCHAR(100) NOT NULL COMMENT '담당',
+  `exhibit_affiliation` VARCHAR(255) NOT NULL COMMENT '소속',
+  `exhibit_booth` VARCHAR(50) NULL COMMENT '부스',
+  
+  -- 회사 정보
+  `company_name` VARCHAR(255) NOT NULL COMMENT '회사명',
+  `representative_name` VARCHAR(100) NOT NULL COMMENT '대표자명',
+  `established_date` DATE NULL COMMENT '설립일',
+  `company_phone` VARCHAR(20) NULL COMMENT '회사전화',
+  `fax_phone` VARCHAR(20) NULL COMMENT '팩스전화',
+  `company_address` TEXT NULL COMMENT '회사주소',
+  `business_type` VARCHAR(255) NULL COMMENT '사업분야',
+  `employee_count` VARCHAR(50) NULL COMMENT '직원수',
+  
+  -- 담당자 정보
+  `contact_person` VARCHAR(100) NOT NULL COMMENT '담당자명',
+  `department` VARCHAR(100) NULL COMMENT '부서',
+  `position` VARCHAR(100) NULL COMMENT '직위',
+  `mobile_phone` VARCHAR(20) NOT NULL COMMENT '휴대폰번호',
+  `email` VARCHAR(255) NOT NULL COMMENT '이메일',
+  
+  -- 상담 내용
+  `technology_content` TEXT NOT NULL COMMENT '기술 도입 목적 및 적용 분야',
+  
+  -- 상담 상태
+  `consultation_type` VARCHAR(50) DEFAULT '출품상담' COMMENT '상담유형',
+  `status` VARCHAR(20) DEFAULT '대기' COMMENT '상담상태',
+  `applied_at` DATE NOT NULL COMMENT '신청일자',
+  
+  -- 기본 필드
+  `is_deleted` BOOLEAN DEFAULT FALSE COMMENT '삭제 여부',
+  `deleted_at` TIMESTAMP NULL COMMENT '삭제 시간',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '생성 시간',
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 시간',
+  
+  -- 인덱스
+  INDEX `idx_exhibit_id` (`exhibit_id`),
+  INDEX `idx_exhibit_title` (`exhibit_title`),
+  INDEX `idx_exhibit_presenter` (`exhibit_presenter`),
+  INDEX `idx_company_name` (`company_name`),
+  INDEX `idx_contact_person` (`contact_person`),
+  INDEX `idx_email` (`email`),
+  INDEX `idx_status` (`status`),
+  INDEX `idx_applied_at` (`applied_at`),
+  INDEX `idx_created_at` (`created_at`),
+  INDEX `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='출품 기술 상담신청 정보';

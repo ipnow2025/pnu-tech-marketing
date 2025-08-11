@@ -421,7 +421,7 @@ export default function ShowcaseTechList({
                   <TableHead className="min-w-[140px] whitespace-nowrap">발표자</TableHead>
                   <TableHead className="min-w-[360px]">기술명</TableHead>
                   <TableHead className="min-w-[240px]">자료</TableHead>
-                  <TableHead className="min-w-[220px] text-right pr-6">관리</TableHead>
+                  <TableHead className="min-w-[220px] text-center pr-6">관리</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -667,6 +667,8 @@ export default function ShowcaseTechList({
         onClose={() => setShowConsultationModal(false)}
         patent={selectedPatent}
         selectionTitle={selectionTitle}
+        presentation={selectedPresentation}
+        exhibit={selectedExhibit}
         onSubmit={handleConsultationSubmitInternal}
       />
     </div>

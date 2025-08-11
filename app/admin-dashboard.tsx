@@ -489,9 +489,13 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
   const [participantApplications, setParticipantApplications] = useState<any[]>([])
   const [technologyConsultations, setTechnologyConsultations] = useState<any[]>([])
   const [patentConsultations, setPatentConsultations] = useState<any[]>([])
+  const [presentationConsultations, setPresentationConsultations] = useState<any[]>([])
+  const [exhibitConsultations, setExhibitConsultations] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isTechnologyLoading, setIsTechnologyLoading] = useState(false)
   const [isPatentLoading, setIsPatentLoading] = useState(false)
+  const [isPresentationLoading, setIsPresentationLoading] = useState(false)
+  const [isExhibitLoading, setIsExhibitLoading] = useState(false)
   
   // 로그인 상태 확인 함수
   const checkLoginStatus = () => {
@@ -616,8 +620,106 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
     }
   }
 
-  const exhibitConsultations = filteredApplications.filter((app) => app.origin === "exhibit")
-  const presentationConsultations = filteredApplications.filter((app) => app.origin === "presentation")
+  // 발표자 상담신청 데이터 가져오기
+  const fetchPresentationConsultations = async () => {
+    setIsPresentationLoading(true)
+    try {
+      const response = await fetch('/api/presentation-consultations')
+      const result = await response.json()
+      
+      if (result.success) {
+        // 데이터 형식을 통일
+        const formattedData = result.data.map((app: any) => ({
+          ...app,
+          id: app.id,
+          companyName: app.company_name,
+          representative: app.representative_name,
+          contact: app.mobile_phone,
+          email: app.email,
+          appliedAt: app.applied_at || (app.created_at ? new Date(app.created_at).toISOString().split('T')[0] : null),
+          type: "기술상담",
+          origin: "presentation",
+          // 추가 상세 정보
+          companyPhone: app.company_phone,
+          faxPhone: app.fax_phone,
+          establishedDate: app.established_date,
+          address: app.company_address,
+          businessType: app.business_type,
+          employeeCount: app.employee_count,
+          department: app.department,
+          position: app.position,
+          contactPerson: app.contact_person,
+          // 발표 정보
+          presentation: {
+            id: app.presentation_id,
+            title: app.presentation_title,
+            techField: app.presentation_tech_field,
+            presenter: app.presentation_presenter,
+            affiliation: app.presentation_affiliation,
+            time: app.presentation_time,
+            room: app.presentation_room,
+          },
+          technology: app.presentation_title,
+          technologyContent: app.technology_content,
+        }))
+        setPresentationConsultations(formattedData)
+      }
+    } catch (error) {
+      console.error('발표자 상담신청 데이터 가져오기 오류:', error)
+    } finally {
+      setIsPresentationLoading(false)
+    }
+  }
+
+  // 출품기술 상담신청 데이터 가져오기
+  const fetchExhibitConsultations = async () => {
+    setIsExhibitLoading(true)
+    try {
+      const response = await fetch('/api/exhibit-consultations')
+      const result = await response.json()
+      
+      if (result.success) {
+        // 데이터 형식을 통일
+        const formattedData = result.data.map((app: any) => ({
+          ...app,
+          id: app.id,
+          companyName: app.company_name,
+          representative: app.representative_name,
+          contact: app.mobile_phone,
+          email: app.email,
+          appliedAt: app.applied_at || (app.created_at ? new Date(app.created_at).toISOString().split('T')[0] : null),
+          type: "기술상담",
+          origin: "exhibit",
+          // 추가 상세 정보
+          companyPhone: app.company_phone,
+          faxPhone: app.fax_phone,
+          establishedDate: app.established_date,
+          address: app.company_address,
+          businessType: app.business_type,
+          employeeCount: app.employee_count,
+          department: app.department,
+          position: app.position,
+          contactPerson: app.contact_person,
+          // 출품 정보
+          exhibit: {
+            id: app.exhibit_id,
+            title: app.exhibit_title,
+            techField: app.exhibit_tech_field,
+            presenter: app.exhibit_presenter,
+            affiliation: app.exhibit_affiliation,
+            booth: app.exhibit_booth,
+          },
+          technology: app.exhibit_title,
+          technologyContent: app.technology_content,
+        }))
+        setExhibitConsultations(formattedData)
+      }
+    } catch (error) {
+      console.error('출품기술 상담신청 데이터 가져오기 오류:', error)
+    } finally {
+      setIsExhibitLoading(false)
+    }
+  }
 
   // 특허 상담신청 데이터 가져오기
   const fetchPatentConsultations = async () => {
@@ -681,6 +783,8 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
     fetchParticipantApplications()
     fetchTechnologyConsultations()
     fetchPatentConsultations()
+    fetchPresentationConsultations()
+    fetchExhibitConsultations()
   }, [])
 
   return (
@@ -755,7 +859,7 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-gray-600">특허목록 상담</p>
-                    <p className="text-2xl font-bold text-gray-900">3</p>
+                    <p className="text-2xl font-bold text-gray-900">{patentConsultations.length}</p>
                   </div>
                   <FileText className="w-8 h-8 text-purple-600" />
                 </div>
@@ -767,8 +871,36 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
+                    <p className="text-sm font-medium text-gray-600">발표자 상담</p>
+                    <p className="text-2xl font-bold text-gray-900">{presentationConsultations.length}</p>
+                  </div>
+                  <FileText className="w-8 h-8 text-indigo-600" />
+                </div>
+                <div className="mt-2 text-sm text-indigo-600">발표 기반 상담</div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">출품기술 상담</p>
+                    <p className="text-2xl font-bold text-gray-900">{exhibitConsultations.length}</p>
+                  </div>
+                  <FileText className="w-8 h-8 text-emerald-600" />
+                </div>
+                <div className="mt-2 text-sm text-emerald-600">출품 기반 상담</div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
                     <p className="text-sm font-medium text-gray-600">총 신청</p>
-                    <p className="text-2xl font-bold text-gray-900">42</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {participantApplications.length + technologyConsultations.length + patentConsultations.length + presentationConsultations.length + exhibitConsultations.length}
+                    </p>
                   </div>
                   <FileText className="w-8 h-8 text-purple-600" />
                 </div>
@@ -863,7 +995,7 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                         </div>
                       </div>
                       <div className="text-right shrink-0">
-                        <div className="text-xs text-gray-500">{app.appliedAt}</div>
+                        <div className="text-xs text-gray-500">{app.appliedAt ? new Date(app.appliedAt).toISOString().split('T')[0] : '미입력'}</div>
                         <div className="mt-2">
                           <Button
                             size="sm"
@@ -1198,7 +1330,9 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 <span>발표자 기술목록 상담신청</span>
-                <span className="text-sm font-normal text-gray-500">{presentationConsultations.length}건</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-normal text-gray-500">{presentationConsultations.length}건</span>
+                </div>
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
@@ -1215,31 +1349,47 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {presentationConsultations.map((app, index) => (
-                    <TableRow key={app.id} className="hover:bg-gray-50">
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell className="font-medium">{app.companyName}</TableCell>
-                      <TableCell>{app.contactPerson || app.representative}</TableCell>
-                      <TableCell className="max-w-xs truncate" title={app.presentation?.title || app.technology}>
-                        {app.presentation?.title || app.technology}
-                      </TableCell>
-                      <TableCell>{app.presentation?.time || "-"}</TableCell>
-                      <TableCell>{app.appliedAt ? new Date(app.appliedAt).toISOString().split('T')[0] : '미입력'}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Button size="sm" variant="outline" onClick={() => handleViewDetail(app)}>
-                            <Eye className="w-4 h-4" />
-                          </Button>
+                  {isPresentationLoading ? (
+                    <TableRow>
+                      <TableCell colSpan={7} className="text-center py-8">
+                        <div className="flex items-center justify-center">
+                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                          <span className="ml-2 text-gray-500">데이터를 불러오는 중...</span>
                         </div>
                       </TableCell>
                     </TableRow>
-                  ))}
-                  {presentationConsultations.length === 0 && (
+                  ) : presentationConsultations.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={7} className="h-24 text-center text-gray-500">
                         발표자 기술목록에서 신청된 상담이 없습니다.
                       </TableCell>
                     </TableRow>
+                  ) : (
+                    presentationConsultations
+                      .filter((app) => 
+                        app.companyName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        app.contactPerson?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        app.presentation?.title?.toLowerCase().includes(searchTerm.toLowerCase())
+                      )
+                      .map((app, index) => (
+                        <TableRow key={app.id} className="hover:bg-gray-50">
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell className="font-medium">{app.companyName}</TableCell>
+                          <TableCell>{app.contactPerson || app.representative}</TableCell>
+                          <TableCell className="max-w-xs truncate" title={app.presentation?.title || app.technology}>
+                            {app.presentation?.title || app.technology}
+                          </TableCell>
+                          <TableCell>{app.presentation?.time || "-"}</TableCell>
+                          <TableCell>{app.appliedAt ? new Date(app.appliedAt).toISOString().split('T')[0] : '미입력'}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <Button size="sm" variant="outline" onClick={() => handleViewDetail(app)}>
+                                <Eye className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
                   )}
                 </TableBody>
               </Table>
@@ -1251,7 +1401,9 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 <span>출품기술 상담신청</span>
-                <span className="text-sm font-normal text-gray-500">{exhibitConsultations.length}건</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-normal text-gray-500">{exhibitConsultations.length}건</span>
+                </div>
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
@@ -1268,35 +1420,51 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {exhibitConsultations.map((app, index) => (
-                    <TableRow key={app.id} className="hover:bg-gray-50">
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell className="font-medium">{app.companyName}</TableCell>
-                      <TableCell>{app.contactPerson || app.representative}</TableCell>
-                      <TableCell className="max-w-xs truncate" title={app.exhibit?.title || app.technology}>
-                        {app.exhibit?.title || app.technology}
-                      </TableCell>
-                      <TableCell>
-                        <span className="inline-block px-2 py-1 bg-emerald-100 text-emerald-800 text-xs font-medium rounded-full">
-                          {app.exhibit?.techField}
-                        </span>
-                      </TableCell>
-                      <TableCell>{app.appliedAt ? new Date(app.appliedAt).toISOString().split('T')[0] : '미입력'}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Button size="sm" variant="outline" onClick={() => handleViewDetail(app)}>
-                            <Eye className="w-4 h-4" />
-                          </Button>
+                  {isExhibitLoading ? (
+                    <TableRow>
+                      <TableCell colSpan={7} className="text-center py-8">
+                        <div className="flex items-center justify-center">
+                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                          <span className="ml-2 text-gray-500">데이터를 불러오는 중...</span>
                         </div>
                       </TableCell>
                     </TableRow>
-                  ))}
-                  {exhibitConsultations.length === 0 && (
+                  ) : exhibitConsultations.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={7} className="h-24 text-center text-gray-500">
                         출품기술 목록에서 신청된 상담이 없습니다.
                       </TableCell>
                     </TableRow>
+                  ) : (
+                    exhibitConsultations
+                      .filter((app) => 
+                        app.companyName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        app.contactPerson?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        app.exhibit?.title?.toLowerCase().includes(searchTerm.toLowerCase())
+                      )
+                      .map((app, index) => (
+                        <TableRow key={app.id} className="hover:bg-gray-50">
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell className="font-medium">{app.companyName}</TableCell>
+                          <TableCell>{app.contactPerson || app.representative}</TableCell>
+                          <TableCell className="max-w-xs truncate" title={app.exhibit?.title || app.technology}>
+                            {app.exhibit?.title || app.technology}
+                          </TableCell>
+                          <TableCell>
+                            <span className="inline-block px-2 py-1 bg-emerald-100 text-emerald-800 text-xs font-medium rounded-full">
+                              {app.exhibit?.techField}
+                            </span>
+                          </TableCell>
+                          <TableCell>{app.appliedAt ? new Date(app.appliedAt).toISOString().split('T')[0] : '미입력'}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <Button size="sm" variant="outline" onClick={() => handleViewDetail(app)}>
+                                <Eye className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
                   )}
                 </TableBody>
               </Table>
