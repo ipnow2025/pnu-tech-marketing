@@ -238,3 +238,40 @@ CREATE TABLE IF NOT EXISTS `pnu_techfair_exhibit_consultations` (
   INDEX `idx_created_at` (`created_at`),
   INDEX `idx_is_deleted` (`is_deleted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='출품 기술 상담신청 정보';
+
+-- 발표/출품 자료 업로드 테이블 생성 (BLOB 방식)
+CREATE TABLE IF NOT EXISTS `pnu_techfair_materials` (
+  `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '자료 ID',
+  
+  -- 자료 연결 정보
+  `showcase_id` INT NOT NULL COMMENT '발표/출품 ID',
+  `showcase_type` ENUM('발표', '출품') NOT NULL COMMENT '발표/출품 구분',
+  
+  -- 파일 정보
+  `file_name` VARCHAR(255) NOT NULL COMMENT '파일명',
+  `file_size` BIGINT UNSIGNED NOT NULL COMMENT '파일 크기 (bytes)',
+  `file_type` VARCHAR(100) NULL COMMENT '파일 MIME 타입',
+  `file_extension` VARCHAR(20) NULL COMMENT '파일 확장자',
+  
+  -- 파일 데이터 (BLOB)
+  `file_data` LONGBLOB NOT NULL COMMENT '파일 데이터',
+  
+  -- 메타데이터
+  `uploaded_by` VARCHAR(100) NULL COMMENT '업로드한 사용자',
+  `description` TEXT NULL COMMENT '자료 설명',
+  
+  -- 기본 필드
+  `is_deleted` BOOLEAN DEFAULT FALSE COMMENT '삭제 여부',
+  `deleted_at` TIMESTAMP NULL COMMENT '삭제 시간',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '생성 시간',
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 시간',
+  
+  -- 인덱스
+  INDEX `idx_showcase_id` (`showcase_id`),
+  INDEX `idx_showcase_type` (`showcase_type`),
+  INDEX `idx_file_name` (`file_name`),
+  INDEX `idx_file_type` (`file_type`),
+  INDEX `idx_uploaded_by` (`uploaded_by`),
+  INDEX `idx_created_at` (`created_at`),
+  INDEX `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='발표/출품 자료 파일 정보 (BLOB 저장)';

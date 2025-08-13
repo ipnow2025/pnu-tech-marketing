@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Users, Phone, FileText, BarChart3, Clock, Search, Download, Eye, X, Building, Mail, User, RefreshCw } from 'lucide-react'
+import { Users, Phone, FileText, BarChart3, Clock, Search, Download, Eye, X, Building, User, RefreshCw, Trash2 } from 'lucide-react'
 
 // 확장된 모의 데이터
 const mockApplications = [
@@ -198,9 +198,9 @@ const mockApplications = [
 // mockApplications 선언 후에 다음 코드 추가:
 const allApplications = [...mockApplications]
 
-const handleSendEmail = (application: any) => {
-  alert(`${application.companyName}(${application.email})로 이메일을 발송했습니다.`)
-}
+// const handleSendEmail = (application: any) => {
+//   alert(`${application.companyName}(${application.email})로 이메일을 발송했습니다.`)
+// }
 
 const handleExcelDownload = () => {
   alert("엑셀 파일 다운로드를 시작합니다.")
@@ -464,9 +464,49 @@ function ApplicationDetailModal({
             <Button variant="outline" onClick={onClose}>
               닫기
             </Button>
-            <Button variant="outline" onClick={() => handleSendEmail(application)}>
-              <Mail className="w-4 h-4 mr-2" />
-              이메일 발송
+
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// 삭제 확인 모달 컴포넌트
+function DeleteConfirmationModal({
+  isOpen,
+  onClose,
+  onConfirm,
+  itemName,
+}: {
+  isOpen: boolean
+  onClose: () => void
+  onConfirm: () => void
+  itemName: string
+}) {
+  if (!isOpen) return null
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+        <div className="p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+              <Trash2 className="w-5 h-5 text-red-600" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900">삭제 확인</h3>
+          </div>
+          <p className="text-gray-600 mb-6">
+            <span className="font-medium">"{itemName}"</span>을(를) 삭제하시겠습니까?
+            <br />
+            <span className="text-sm text-red-600">이 작업은 되돌릴 수 없습니다.</span>
+          </p>
+          <div className="flex justify-end gap-3">
+            <Button variant="outline" onClick={onClose}>
+              취소
+            </Button>
+            <Button variant="destructive" onClick={onConfirm}>
+              삭제
             </Button>
           </div>
         </div>
@@ -484,6 +524,10 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedApplication, setSelectedApplication] = useState<any>(null)
   const [showDetailModal, setShowDetailModal] = useState(false)
+  
+  // 삭제 관련 상태 추가
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [itemToDelete, setItemToDelete] = useState<any>(null)
   
   // 참가신청 데이터 상태
   const [participantApplications, setParticipantApplications] = useState<any[]>([])
@@ -539,6 +583,72 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
   const handleViewDetail = (application: any) => {
     setSelectedApplication(application)
     setShowDetailModal(true)
+  }
+
+  // 삭제 처리 함수들
+  const handleDelete = (item: any, type: string) => {
+    setItemToDelete({ item, type })
+    setShowDeleteModal(true)
+  }
+
+  const confirmDelete = async () => {
+    if (!itemToDelete) return
+
+    const { item, type } = itemToDelete
+    let endpoint = ''
+    
+    switch (type) {
+      case 'participant':
+        endpoint = `/api/participant-applications?id=${item.id}`
+        break
+      case 'technology':
+        endpoint = `/api/technology-consultations?id=${item.id}`
+        break
+      case 'patent':
+        endpoint = `/api/patent-consultations?id=${item.id}`
+        break
+      case 'presentation':
+        endpoint = `/api/presentation-consultations?id=${item.id}`
+        break
+      case 'exhibit':
+        endpoint = `/api/exhibit-consultations?id=${item.id}`
+        break
+      default:
+        break
+    }
+
+    try {
+      const response = await fetch(endpoint, { method: 'DELETE' })
+      if (response.ok) {
+        // 성공적으로 삭제된 경우 해당 목록에서 제거
+        switch (type) {
+          case 'participant':
+            setParticipantApplications(prev => prev.filter(app => app.id !== item.id))
+            break
+          case 'technology':
+            setTechnologyConsultations(prev => prev.filter(app => app.id !== item.id))
+            break
+          case 'patent':
+            setPatentConsultations(prev => prev.filter(app => app.id !== item.id))
+            break
+          case 'presentation':
+            setPresentationConsultations(prev => prev.filter(app => app.id !== item.id))
+            break
+          case 'exhibit':
+            setExhibitConsultations(prev => prev.filter(app => app.id !== item.id))
+            break
+        }
+        alert('성공적으로 삭제되었습니다.')
+      } else {
+        alert('삭제에 실패했습니다.')
+      }
+    } catch (error) {
+      console.error('삭제 오류:', error)
+      alert('삭제 중 오류가 발생했습니다.')
+    } finally {
+      setShowDeleteModal(false)
+      setItemToDelete(null)
+    }
   }
 
   // 참가신청 데이터 가져오기
@@ -1106,6 +1216,14 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                               <Button size="sm" variant="outline" onClick={() => handleViewDetail(app)}>
                                 <Eye className="w-4 h-4" />
                               </Button>
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
+                                onClick={() => handleDelete(app, 'participant')}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
                             </div>
                           </TableCell>
                         </TableRow>
@@ -1193,6 +1311,14 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                             <div className="flex items-center gap-2">
                               <Button size="sm" variant="outline" onClick={() => handleViewDetail(app)}>
                                 <Eye className="w-4 h-4" />
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
+                                onClick={() => handleDelete(app, 'technology')}
+                              >
+                                <Trash2 className="w-4 h-4" />
                               </Button>
                             </div>
                           </TableCell>
@@ -1290,6 +1416,14 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                               <Button size="sm" variant="outline" onClick={() => handleViewDetail(app)}>
                                 <Eye className="w-4 h-4" />
                               </Button>
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
+                                onClick={() => handleDelete(app, 'patent')}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
                             </div>
                           </TableCell>
                         </TableRow>
@@ -1386,6 +1520,14 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                               <Button size="sm" variant="outline" onClick={() => handleViewDetail(app)}>
                                 <Eye className="w-4 h-4" />
                               </Button>
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
+                                onClick={() => handleDelete(app, 'presentation')}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
                             </div>
                           </TableCell>
                         </TableRow>
@@ -1461,6 +1603,14 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                               <Button size="sm" variant="outline" onClick={() => handleViewDetail(app)}>
                                 <Eye className="w-4 h-4" />
                               </Button>
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
+                                onClick={() => handleDelete(app, 'exhibit')}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
                             </div>
                           </TableCell>
                         </TableRow>
@@ -1478,6 +1628,17 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
         application={selectedApplication}
         isOpen={showDetailModal}
         onClose={() => setShowDetailModal(false)}
+      />
+
+      {/* 삭제 확인 모달 */}
+      <DeleteConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false)
+          setItemToDelete(null)
+        }}
+        onConfirm={confirmDelete}
+        itemName={itemToDelete ? `${itemToDelete.item.companyName} - ${itemToDelete.item.type || '상담신청'}` : ''}
       />
     </div>
   )

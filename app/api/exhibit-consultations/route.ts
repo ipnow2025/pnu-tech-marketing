@@ -111,3 +111,45 @@ export async function GET() {
     )
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+    
+    if (!id) {
+      return NextResponse.json(
+        { success: false, error: '삭제할 출품 기술 상담신청 ID가 필요합니다.' },
+        { status: 400 }
+      )
+    }
+
+    // 소프트 삭제: is_deleted = TRUE, deleted_at = 현재시간으로 설정
+    const sql = `
+      UPDATE pnu_techfair_exhibit_consultations 
+      SET is_deleted = TRUE, deleted_at = CURRENT_TIMESTAMP 
+      WHERE id = ? AND is_deleted = FALSE
+    `
+    
+    const result = await query(sql, [id]) as any
+    
+    if (result.affectedRows === 0) {
+      return NextResponse.json(
+        { success: false, error: '해당 출품 기술 상담신청을 찾을 수 없거나 이미 삭제되었습니다.' },
+        { status: 404 }
+      )
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: '출품 기술 상담신청이 성공적으로 삭제되었습니다.'
+    })
+    
+  } catch (error) {
+    console.error('출품 기술 상담신청 삭제 오류:', error)
+    return NextResponse.json(
+      { success: false, error: '출품 기술 상담신청 삭제 중 오류가 발생했습니다.' },
+      { status: 500 }
+    )
+  }
+}

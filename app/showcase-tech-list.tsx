@@ -151,6 +151,7 @@ export default function ShowcaseTechList({
         const local = await getLocalMaterials(p.id)
         next[p.id] = [...remote, ...local]
       }
+      
       setMaterials(next)
     }
     load()
@@ -167,15 +168,33 @@ export default function ShowcaseTechList({
     const id = uploadTargetIdRef.current
     if (!file || !id) return
 
+    // 해당 항목의 타입 확인
+    const item = data.find(d => d.id === id)
+    if (!item) return
+
     let added: MaterialItem | null = null
     try {
       const form = new FormData()
       form.append("id", String(id))
       form.append("file", file)
+      form.append("showcaseType", item.type) // 발표 또는 출품 타입 전달
+      
       const res = await fetch("/api/materials/upload", { method: "POST", body: form })
       if (res.ok) {
         const d = (await res.json()) as { url: string; name: string; size: number; type?: string }
         added = { name: d.name, size: d.size, type: d.type, url: d.url }
+      } else {
+        const errorData = await res.json()
+        if (errorData.error === "file-too-large") {
+          alert("파일 크기가 너무 큽니다. 50MB 이하의 파일만 업로드 가능합니다.")
+          return
+        } else if (errorData.error === "file-type-not-allowed") {
+          alert("지원하지 않는 파일 형식입니다.")
+          return
+        } else {
+          alert("업로드에 실패했습니다.")
+          return
+        }
       }
     } catch {}
 
@@ -186,8 +205,18 @@ export default function ShowcaseTechList({
       return
     }
 
-    setMaterials((prev) => ({ ...prev, [id]: [...(prev[id] || []), added as MaterialItem] }))
-    alert("업로드 완료! 모든 사용자가 다운로드할 수 있습니다.")
+    // 업로드 성공 시 자료 목록 새로고침
+    try {
+      const res = await fetch(`/api/materials/list?id=${id}`, { cache: "no-store" })
+      if (res.ok) {
+        const json = (await res.json()) as { items: MaterialItem[] }
+        const remote = json.items || []
+        const local = await getLocalMaterials(id)
+        setMaterials((prev) => ({ ...prev, [id]: [...remote, ...local] }))
+      }
+    } catch {}
+
+    alert("업로드 완료! 기존 파일이 교체되었습니다.")
   }
 
   const downloadMaterial = (m: MaterialItem) => {
@@ -377,18 +406,15 @@ export default function ShowcaseTechList({
                     {files.length === 0 ? (
                       <span className="text-xs text-gray-500">자료 없음</span>
                     ) : (
-                      files.slice(0, 2).map((m, i) => (
-                        <Button
-                          key={m.url || `${m.name}-${i}`}
-                          variant="outline"
-                          size="sm"
-                          className="bg-transparent"
-                          onClick={() => downloadMaterial(m)}
-                        >
-                          <FileIcon className="w-3.5 h-3.5 mr-1.5" />
-                          <span className="text-xs">{m.name}</span>
-                        </Button>
-                      ))
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="bg-transparent"
+                        onClick={() => downloadMaterial(files[0])}
+                      >
+                        <FileIcon className="w-3.5 h-3.5 mr-1.5" />
+                        <span className="text-xs">{files[0].name}</span>
+                      </Button>
                     )}
                   </div>
                   <div className="flex gap-2">
@@ -442,52 +468,32 @@ export default function ShowcaseTechList({
                       <TableCell>
                         <div className="flex flex-wrap gap-2 items-center">
                           {files.length === 0 && <span className="text-xs text-gray-500">자료 없음</span>}
-                          {files.map((m, i) => (
+                          {files.length > 0 && (
                             <Button
-                              key={m.url || `${m.name}-${i}`}
                               variant="outline"
                               size="sm"
                               className="bg-transparent"
-                              onClick={() => downloadMaterial(m)}
-                              title={`${m.name} (${kb(m.size)})`}
+                              onClick={() => downloadMaterial(files[0])}
+                              title={`${files[0].name} (${kb(files[0].size)})`}
                             >
                               <FileIcon className="w-3.5 h-3.5 mr-2" />
-                              <span className="max-w-[140px] truncate">{m.name}</span>
+                              <span className="max-w-[140px] truncate">{files[0].name}</span>
                             </Button>
-                          ))}
+                          )}
                         </div>
                       </TableCell>
                       <TableCell className="text-right pr-6">
                         <div className="flex justify-end gap-2">
-                          {files.length <= 1 ? (
+                          {files.length > 0 && (
                             <Button
                               size="sm"
                               variant="outline"
                               className="bg-transparent"
-                              onClick={() => {
-                                if (files.length === 0) alert("다운로드할 자료가 없습니다.")
-                                else downloadFirst(item.id)
-                              }}
+                              onClick={() => downloadFirst(item.id)}
                             >
                               <Download className="w-4 h-4 mr-1" />
                               다운받기
                             </Button>
-                          ) : (
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button size="sm" variant="outline" className="bg-transparent">
-                                  <Download className="w-4 h-4 mr-1" />
-                                  다운받기
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                {files.map((m, i) => (
-                                  <DropdownMenuItem key={m.url || `${m.name}-${i}`} onClick={() => downloadMaterial(m)}>
-                                    {m.name} · {kb(m.size)}
-                                  </DropdownMenuItem>
-                                ))}
-                              </DropdownMenuContent>
-                            </DropdownMenu>
                           )}
                           <Button size="sm" onClick={() => openPresentationConsultation(item)} className="shrink-0">
                             상담신청
@@ -585,7 +591,7 @@ export default function ShowcaseTechList({
                   <TableHead className="min-w-[360px]">기술명</TableHead>
                   <TableHead className="min-w-[140px] whitespace-nowrap">담당</TableHead>
                   <TableHead className="min-w-[180px] whitespace-nowrap">소속</TableHead>
-                  <TableHead className="min-w-[220px] text-right pr-6">관리</TableHead>
+                  <TableHead className="min-w-[220px] text-center pr-6">관리</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -605,35 +611,16 @@ export default function ShowcaseTechList({
                       <TableCell className="text-gray-700 break-keep whitespace-nowrap">{item.affiliation}</TableCell>
                       <TableCell className="text-right pr-6">
                         <div className="flex justify-end gap-2">
-                          {files.length <= 1 ? (
+                          {files.length > 0 && (
                             <Button
                               size="sm"
                               variant="outline"
                               className="bg-transparent"
-                              onClick={() => {
-                                if (files.length === 0) downloadExhibitDoc(item)
-                                else downloadFirst(item.id)
-                              }}
+                              onClick={() => downloadFirst(item.id)}
                             >
                               <Download className="w-4 h-4 mr-1" />
                               다운받기
                             </Button>
-                          ) : (
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button size="sm" variant="outline" className="bg-transparent">
-                                  <Download className="w-4 h-4 mr-1" />
-                                  다운받기
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                {files.map((m, i) => (
-                                  <DropdownMenuItem key={m.url || `${m.name}-${i}`} onClick={() => downloadMaterial(m)}>
-                                    {m.name} · {kb(m.size)}
-                                  </DropdownMenuItem>
-                                ))}
-                              </DropdownMenuContent>
-                            </DropdownMenu>
                           )}
                           <Button size="sm" onClick={() => openExhibitConsultation(item)} className="shrink-0">
                             상담신청
