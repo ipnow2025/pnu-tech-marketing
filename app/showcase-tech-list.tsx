@@ -597,13 +597,14 @@ export default function ShowcaseTechList({
         {/* Desktop/tablet table */}
         <div className="hidden sm:block border rounded-lg overflow-hidden">
           <div className="overflow-x-auto">
-            <Table className="min-w-[780px] text-sm">
+            <Table className="min-w-[1020px] text-sm">
               <TableHeader>
                 <TableRow className="bg-gray-50">
                   <TableHead className="min-w-[60px] w-[60px] text-center">번호</TableHead>
                   <TableHead className="min-w-[360px]">기술명</TableHead>
                   <TableHead className="min-w-[140px] whitespace-nowrap">담당</TableHead>
                   <TableHead className="min-w-[180px] whitespace-nowrap">소속</TableHead>
+                  <TableHead className="min-w-[240px]">자료</TableHead>
                   <TableHead className="min-w-[220px] text-center pr-6">관리</TableHead>
                 </TableRow>
               </TableHeader>
@@ -622,6 +623,23 @@ export default function ShowcaseTechList({
                       </TableCell>
                       <TableCell className="text-gray-700 break-keep whitespace-nowrap">{item.presenter}</TableCell>
                       <TableCell className="text-gray-700 break-keep whitespace-nowrap">{item.affiliation}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap gap-2 items-center">
+                          {files.length === 0 && <span className="text-xs text-gray-500">자료 없음</span>}
+                          {files.length > 0 && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="bg-transparent"
+                              onClick={() => downloadMaterial(files[0])}
+                              title={`${files[0].name} (${kb(files[0].size)})`}
+                            >
+                              <FileIcon className="w-3.5 h-3.5 mr-2" />
+                              <span className="max-w-[140px] truncate">{files[0].name}</span>
+                            </Button>
+                          )}
+                        </div>
+                      </TableCell>
                       <TableCell className="text-right pr-6">
                         <div className="flex justify-end gap-2">
                           {files.length > 0 && (
@@ -651,7 +669,7 @@ export default function ShowcaseTechList({
                 })}
                 {exhibits.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={5} className="h-24 text-center">
+                    <TableCell colSpan={6} className="h-24 text-center">
                       검색 결과가 없습니다.
                     </TableCell>
                   </TableRow>
