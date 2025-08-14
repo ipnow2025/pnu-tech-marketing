@@ -12,6 +12,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMe
 import { patentData } from "./patent-data"
 import type { Patent } from "./patent-types"
 import { PatentConsultationModal } from "./patent-consultation-modal"
+import { useEffect } from "react"
 
 interface PatentTableProps {
   onConsultationSubmit?: (consultationData: any) => void
@@ -55,8 +56,20 @@ export function PatentTable({ onConsultationSubmit }: PatentTableProps) {
     setSearchTerm("")
   }
 
+  useEffect(() => {
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setShowConsultationModal(false)
+        setSelectedPatent(null)
+      }
+    }
+
+    document.addEventListener("keydown", handleEscapeKey)
+    return () => document.removeEventListener("keydown", handleEscapeKey)
+  }, [])
+
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
         <div className="flex-1 w-full lg:max-w-md relative">
           <Input placeholder="특허기술명 검색" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pr-10" />
@@ -128,10 +141,6 @@ export function PatentTable({ onConsultationSubmit }: PatentTableProps) {
               <div className="flex gap-2">
                 <Button size="sm" className="flex-1" onClick={(e) => handleConsultationClick(p, e)}>
                   상담신청
-                </Button>
-                <Button size="sm" variant="outline" className="bg-transparent flex-1">
-                  <Download className="w-4 h-4 mr-1" />
-                  PDF
                 </Button>
               </div>
             </CardContent>
@@ -205,13 +214,19 @@ export function PatentTable({ onConsultationSubmit }: PatentTableProps) {
 
         {/* Side panel (unchanged) */}
         {selectedPatent && !showConsultationModal && (
-          <div className="w-full lg:w-1/3 transition-all duration-300 ease-in-out mt-4 lg:mt-0">
-            <Card className="lg:sticky lg:top-4 shadow-lg border-l-4 border-l-blue-500">
-              <CardContent className="p-6">
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            onClick={() => setSelectedPatent(null)} // 배경 클릭 시 모달 닫기
+          >
+            <div 
+              className="bg-white rounded-lg shadow-xl max-w-xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()} // 모달 내부 클릭 시 이벤트 전파 방지
+            >
+              <div className="p-6">
                 <div className="flex justify-between items-start mb-4">
                   <h3 className="text-lg font-bold text-gray-900 leading-tight break-keep">{selectedPatent.patentName}</h3>
                   <Button variant="ghost" size="sm" onClick={() => setSelectedPatent(null)} className="ml-2 flex-shrink-0">
-                    <X className="h-4 w-4" />
+                    <X className="h-4 h-4" />
                   </Button>
                 </div>
 
@@ -264,20 +279,10 @@ export function PatentTable({ onConsultationSubmit }: PatentTableProps) {
                     <Button className="w-full" onClick={(e) => handleConsultationClick(selectedPatent, e as any)}>
                       상담신청
                     </Button>
-                    <div className="grid grid-cols-2 gap-2">
-                      <Button variant="outline" size="sm" className="flex items-center gap-1 bg-transparent">
-                        <FileText className="h-3 w-3" />
-                        상세보기
-                      </Button>
-                      <Button variant="outline" size="sm" className="flex items-center gap-1 bg-transparent">
-                        <Download className="h-3 w-3" />
-                        PDF
-                      </Button>
-                    </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         )}
       </div>

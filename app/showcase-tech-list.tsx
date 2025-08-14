@@ -330,7 +330,7 @@ export default function ShowcaseTechList({
   }
 
   return (
-    <div ref={topRef} className="space-y-8">
+    <div ref={topRef} className="flex flex-col gap-8">
       {/* 헤딩 */}
       <div className="text-center">
         <h2 className="text-3xl font-bold mb-4 break-keep">발표/출품 기술목록</h2>
@@ -421,11 +421,18 @@ export default function ShowcaseTechList({
                     <Button size="sm" onClick={() => openPresentationConsultation(item)} className="flex-1">
                       상담신청
                     </Button>
-                    {files.length > 0 && (
+                    {files.length > 0 ? (
                       <Button size="sm" variant="outline" className="bg-transparent flex-1" onClick={() => downloadFirst(item.id)}>
                         <Download className="w-4 h-4 mr-1" />
                         다운받기
                       </Button>
+                    ) : (
+                      isAdmin && (
+                        <Button size="sm" className="bg-blue-600 hover:bg-blue-700 flex-1" onClick={() => openUpload(item.id)}>
+                          <UploadCloud className="w-4 h-4 mr-1" />
+                          업로드
+                        </Button>
+                      )
                     )}
                   </div>
                 </CardContent>
@@ -561,18 +568,24 @@ export default function ShowcaseTechList({
                     <Button size="sm" onClick={() => openExhibitConsultation(item)} className="flex-1">
                       상담신청
                     </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="bg-transparent flex-1"
-                      onClick={() => {
-                        if (files.length === 0) downloadExhibitDoc(item)
-                        else downloadFirst(item.id)
-                      }}
-                    >
-                      <Download className="w-4 h-4 mr-1" />
-                      다운받기
-                    </Button>
+                    {files.length > 0 ? (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="bg-transparent flex-1"
+                        onClick={() => downloadFirst(item.id)}
+                      >
+                        <Download className="w-4 h-4 mr-1" />
+                        다운받기
+                      </Button>
+                    ) : (
+                      isAdmin && (
+                        <Button size="sm" className="bg-blue-600 hover:bg-blue-700 flex-1" onClick={() => openUpload(item.id)}>
+                          <UploadCloud className="w-4 h-4 mr-1" />
+                          업로드
+                        </Button>
+                      )
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -627,6 +640,7 @@ export default function ShowcaseTechList({
                           </Button>
                           {isAdmin && (
                             <Button size="sm" className="bg-blue-600 hover:bg-blue-700 shrink-0" onClick={() => openUpload(item.id)}>
+                              <UploadCloud className="w-4 h-4 mr-1" />
                               업로드
                             </Button>
                           )}
