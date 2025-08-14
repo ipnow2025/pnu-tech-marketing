@@ -1172,13 +1172,13 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>번호</TableHead>
-                    <TableHead>회사명</TableHead>
-                    <TableHead>대표자</TableHead>
-                    <TableHead>연락처</TableHead>
-                    <TableHead>이메일</TableHead>
-                    <TableHead>신청일</TableHead>
-                    <TableHead>관리</TableHead>
+                    <TableHead className="min-w-[60px] w-[60px] text-center">번호</TableHead>
+                    <TableHead className="min-w-[200px]">회사명</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap">대표자</TableHead>
+                    <TableHead className="min-w-[140px] whitespace-nowrap">연락처</TableHead>
+                    <TableHead className="min-w-[200px]">이메일</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap">신청일</TableHead>
+                    <TableHead className="min-w-[120px] text-center">관리</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -1205,7 +1205,7 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                       )
                       .map((app, index) => (
                         <TableRow key={app.id} className="hover:bg-gray-50">
-                          <TableCell>{index + 1}</TableCell>
+                          <TableCell className="text-center">{index + 1}</TableCell>
                           <TableCell className="font-medium">{app.companyName}</TableCell>
                           <TableCell>{app.representative}</TableCell>
                           <TableCell>{app.contact}</TableCell>
@@ -1267,12 +1267,12 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>번호</TableHead>
-                    <TableHead>회사명</TableHead>
-                    <TableHead>담당자</TableHead>
-                    <TableHead>희망기술</TableHead>
-                    <TableHead>신청일</TableHead>
-                    <TableHead>관리</TableHead>
+                    <TableHead className="min-w-[60px] w-[60px] text-center">번호</TableHead>
+                    <TableHead className="min-w-[200px]">회사명</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap">담당자</TableHead>
+                    <TableHead className="min-w-[300px]">희망기술</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap">신청일</TableHead>
+                    <TableHead className="min-w-[120px] text-center">관리</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -1300,7 +1300,7 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                       )
                       .map((app, index) => (
                         <TableRow key={app.id} className="hover:bg-gray-50">
-                          <TableCell>{index + 1}</TableCell>
+                          <TableCell className="text-center">{index + 1}</TableCell>
                           <TableCell className="font-medium">{app.companyName}</TableCell>
                           <TableCell>{app.contactPerson || app.representative}</TableCell>
                           <TableCell className="max-w-xs truncate" title={app.technology}>
@@ -1363,14 +1363,14 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>번호</TableHead>
-                    <TableHead>회사명</TableHead>
-                    <TableHead>담당자</TableHead>
-                    <TableHead>특허명</TableHead>
-                    <TableHead>기술분야</TableHead>
-                    <TableHead>기술료</TableHead>
-                    <TableHead>신청일</TableHead>
-                    <TableHead>관리</TableHead>
+                    <TableHead className="min-w-[60px] w-[60px] text-center">번호</TableHead>
+                    <TableHead className="min-w-[180px]">회사명</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap">담당자</TableHead>
+                    <TableHead className="min-w-[300px]">특허명</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap">기술분야</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap">기술료</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap">신청일</TableHead>
+                    <TableHead className="min-w-[120px] text-center">관리</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -1398,7 +1398,7 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                       )
                       .map((app, index) => (
                         <TableRow key={app.id} className="hover:bg-gray-50">
-                          <TableCell>{index + 1}</TableCell>
+                          <TableCell className="text-center">{index + 1}</TableCell>
                           <TableCell className="font-medium">{app.companyName}</TableCell>
                           <TableCell>{app.contactPerson || app.representative}</TableCell>
                           <TableCell className="max-w-xs truncate" title={app.patent?.patentName}>
@@ -1473,13 +1473,13 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>번호</TableHead>
-                    <TableHead>회사명</TableHead>
-                    <TableHead>담당자</TableHead>
-                    <TableHead>발표명</TableHead>
-                    <TableHead>시간</TableHead>
-                    <TableHead>신청일</TableHead>
-                    <TableHead>관리</TableHead>
+                    <TableHead className="min-w-[60px] w-[60px] text-center">번호</TableHead>
+                    <TableHead className="min-w-[180px]">회사명</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap">담당자</TableHead>
+                    <TableHead className="min-w-[300px]">발표명</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap">시간</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap">신청일</TableHead>
+                    <TableHead className="min-w-[120px] text-center">관리</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -1507,7 +1507,7 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                       )
                       .map((app, index) => (
                         <TableRow key={app.id} className="hover:bg-gray-50">
-                          <TableCell>{index + 1}</TableCell>
+                          <TableCell className="text-center">{index + 1}</TableCell>
                           <TableCell className="font-medium">{app.companyName}</TableCell>
                           <TableCell>{app.contactPerson || app.representative}</TableCell>
                           <TableCell className="max-w-xs truncate" title={app.presentation?.title || app.technology}>
@@ -1552,13 +1552,13 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>번호</TableHead>
-                    <TableHead>회사명</TableHead>
-                    <TableHead>담당자</TableHead>
-                    <TableHead>출품명</TableHead>
-                    <TableHead>기술분야</TableHead>
-                    <TableHead>신청일</TableHead>
-                    <TableHead>관리</TableHead>
+                    <TableHead className="min-w-[60px] w-[60px] text-center">번호</TableHead>
+                    <TableHead className="min-w-[180px]">회사명</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap">담당자</TableHead>
+                    <TableHead className="min-w-[300px]">출품명</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap">기술분야</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap">신청일</TableHead>
+                    <TableHead className="min-w-[120px] text-center">관리</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -1586,7 +1586,7 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                       )
                       .map((app, index) => (
                         <TableRow key={app.id} className="hover:bg-gray-50">
-                          <TableCell>{index + 1}</TableCell>
+                          <TableCell className="text-center">{index + 1}</TableCell>
                           <TableCell className="font-medium">{app.companyName}</TableCell>
                           <TableCell>{app.contactPerson || app.representative}</TableCell>
                           <TableCell className="max-w-xs truncate" title={app.exhibit?.title || app.technology}>
