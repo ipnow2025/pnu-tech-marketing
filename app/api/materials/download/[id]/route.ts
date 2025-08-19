@@ -19,7 +19,7 @@ export async function GET(
     const sql = `
       SELECT file_name, file_size, file_type, file_data 
       FROM pnu_techfair_materials 
-      WHERE id = ? AND is_deleted = FALSE
+      WHERE id = ?
     `
     
     const materials = await query(sql, [parseInt(id)]) as any[]

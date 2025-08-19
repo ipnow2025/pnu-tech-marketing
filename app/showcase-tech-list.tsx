@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Search, ArrowDownToLine, ArrowUpToLine, UploadCloud, FileIcon, Download } from 'lucide-react'
+import { Search, ArrowDownToLine, ArrowUpToLine, UploadCloud, FileIcon, Download, Trash2 } from 'lucide-react'
 import { Badge } from "@/components/ui/badge"
 import { PatentConsultationModal } from "./patent-consultation-modal"
 import type { Patent } from "./patent-types"
@@ -29,6 +29,7 @@ interface ShowcaseItem {
 }
 
 interface MaterialItem {
+  id?: string
   name: string
   size: number
   type?: string
@@ -39,11 +40,11 @@ interface MaterialItem {
 
 // 샘플 데이터
 const data: ShowcaseItem[] = [
-  { id: 1, title: "기술이전·사업화 지원제도 소개", type: "발표", techField: "기타", presenter: "정해림 차장", affiliation: "기술보증기금", summary: "기술이전·사업화 지원제도 전반 및 기업 활용 방법.", time: "14:00 - 14:20", room: "세션룸 A", image: "/placeholder.svg?height=240&width=480" },
-  { id: 2, title: "스마트팩토리, 클라우드 보안", type: "발표", techField: "정보/통신", presenter: "최윤호 교수", affiliation: "부산대학교", summary: "클라우드 보안 아키텍처 및 적용 방안.", time: "14:20 - 14:40", room: "세션룸 A", image: "/placeholder.svg?height=240&width=480" },
-  { id: 3, title: "컴퓨터비전, 멀티모달 기반 영상 처리 및 생성", type: "발표", techField: "정보/통신", presenter: "전상률 교수", affiliation: "부산대학교", summary: "멀티모달 학습과 응용.", time: "14:40 - 15:00", room: "세션룸 A", image: "/placeholder.svg?height=240&width=480" },
-  { id: 4, title: "안티드론 시스템", type: "발표", techField: "정보/통신", presenter: "김정창 교수", affiliation: "국립한국해양대학교", summary: "RF 신호 분석 기반 탐지/식별.", time: "15:00 - 15:20", room: "세션룸 A", image: "/placeholder.svg?height=240&width=480" },
-  { id: 5, title: "AI 원천 및 응용기술, 해양 AI 특화 등", type: "발표", techField: "정보/통신", presenter: "김민호 교수", affiliation: "국립한국해양대학교", summary: "해양 특화 데이터/모델.", time: "15:20 - 15:40", room: "세션룸 A", image: "/placeholder.svg?height=240&width=480" },
+  { id: 1, title: "PNU 기술이전 · 사업화 지원 프로세스 소개", type: "발표", techField: "기타", presenter: "최정식 과장", affiliation: "부산대학교기술지주㈜", summary: "기술이전·사업화 지원제도 전반 및 기업 활용 방법.", time: "14:00 - 14:20", room: "세션룸 A", image: "/placeholder.svg?height=240&width=480" },
+  { id: 2, title: "AI 기반 스마트팩토리 작업 자동화 기술, 제로 트러스트 클라우드 보안", type: "발표", techField: "정보/통신", presenter: "최윤호 교수", affiliation: "부산대학교", summary: "클라우드 보안 아키텍처 및 적용 방안.", time: "14:20 - 14:40", room: "세션룸 A", image: "/placeholder.svg?height=240&width=480" },
+  { id: 3, title: "데이터 라벨링 없이 영상 속 사물 자동 인식 기술", type: "발표", techField: "정보/통신", presenter: "전상률 교수", affiliation: "부산대학교", summary: "멀티모달 학습과 응용.", time: "14:40 - 15:00", room: "세션룸 A", image: "/placeholder.svg?height=240&width=480" },
+  { id: 4, title: "드론 통신신호 분석을 이용한 드론 탐지 방법 및 장치", type: "발표", techField: "정보/통신", presenter: "김정창 교수", affiliation: "국립한국해양대학교", summary: "RF 신호 분석 기반 탐지/식별.", time: "15:00 - 15:20", room: "세션룸 A", image: "/placeholder.svg?height=240&width=480" },
+  { id: 5, title: "인공신경망 기반 집중도 분석 및 학습 집중도 모니터링 시스템", type: "발표", techField: "정보/통신", presenter: "김민호 교수", affiliation: "국립한국해양대학교", summary: "해양 특화 데이터/모델.", time: "15:20 - 15:40", room: "세션룸 A", image: "/placeholder.svg?height=240&width=480" },
   { id: 206, title: "광역 재귀 반사 필름의 불량 탐지를 위한 인공지능 비전 시스템 및 방법", type: "출품", techField: "정보/통신", presenter: "최윤호 교수님", affiliation: "부산대학교", summary: "광역 재귀반사 필름 불량 탐지 인공지능 비전 시스템", image: "/placeholder.svg?height=240&width=480", applicationNumber: "10-2022-0133393" },
   { id: 201, title: "드론 통신신호 분석을 이용한 드론 탐지 방법 및 장치", type: "출품", techField: "정보/통신", presenter: "김정창 교수님", affiliation: "해양대학교", summary: "RF 통신신호 구조/프로토콜 분석 기반 드론 탐지·식별", booth: "E-01", image: "/placeholder.svg?height=240&width=480", applicationNumber: "10-2024-0094859" },
   { id: 202, title: "인공신경망 기반 집중도분석 및 학습 집중도 모니터링 시스템", type: "출품", techField: "정보/통신", presenter: "김민호 교수님", affiliation: "해양대학교", summary: "생체/환경 신호 기반 집중도 분석 및 학습 모니터링", booth: "E-02", image: "/placeholder.svg?height=240&width=480", applicationNumber: "10-2025-0025674" },
@@ -240,6 +241,34 @@ export default function ShowcaseTechList({
       URL.revokeObjectURL(url)
     }
   }
+
+  const handleDeleteMaterial = async (exhibitId: number, materialId: string) => {
+    if (confirm("정말로 이 자료를 삭제하시겠습니까?")) {
+      try {
+        const response = await fetch(`/api/materials/delete?id=${materialId}`, {
+          method: 'DELETE',
+        })
+        
+        if (response.ok) {
+          const result = await response.json()
+          
+          // 삭제 성공 시 로컬 상태에서 제거
+          setMaterials((prev) => {
+            const currentMaterials = prev[exhibitId] || []
+            const updatedMaterials = currentMaterials.filter(m => m.id !== materialId)
+            return { ...prev, [exhibitId]: updatedMaterials }
+          })
+          alert("자료가 성공적으로 삭제되었습니다.")
+        } else {
+          const errorData = await response.json()
+          alert(`삭제 실패: ${errorData.error || '알 수 없는 오류'}`)
+        }
+      } catch (error) {
+        console.error('자료 삭제 오류:', error)
+        alert('자료 삭제 중 오류가 발생했습니다.')
+      }
+    }
+  }
   const downloadFirst = (id: number) => {
     const files = materials[id] || []
     if (files.length > 0) downloadMaterial(files[0])
@@ -406,15 +435,28 @@ export default function ShowcaseTechList({
                     {files.length === 0 ? (
                       <span className="text-xs text-gray-500">자료 없음</span>
                     ) : (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="bg-transparent"
-                        onClick={() => downloadMaterial(files[0])}
-                      >
-                        <FileIcon className="w-3.5 h-3.5 mr-1.5" />
-                        <span className="text-xs">{files[0].name}</span>
-                      </Button>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="bg-transparent"
+                          onClick={() => downloadMaterial(files[0])}
+                        >
+                          <FileIcon className="w-3.5 h-3.5 mr-1.5" />
+                          <span className="text-xs max-w-[120px] truncate">{files[0].name}</span>
+                        </Button>
+                        {isAdmin && files[0].id && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 border-red-200 hover:border-red-300"
+                            onClick={() => handleDeleteMaterial(item.id, files[0].id!)}
+                            title="자료 삭제"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        )}
+                      </div>
                     )}
                   </div>
                   <div className="flex gap-2">
@@ -476,16 +518,29 @@ export default function ShowcaseTechList({
                         <div className="flex flex-wrap gap-2 items-center">
                           {files.length === 0 && <span className="text-xs text-gray-500">자료 없음</span>}
                           {files.length > 0 && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="bg-transparent"
-                              onClick={() => downloadMaterial(files[0])}
-                              title={`${files[0].name} (${kb(files[0].size)})`}
-                            >
-                              <FileIcon className="w-3.5 h-3.5 mr-2" />
-                              <span className="max-w-[140px] truncate">{files[0].name}</span>
-                            </Button>
+                            <div className="flex items-center gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="bg-transparent"
+                                onClick={() => downloadMaterial(files[0])}
+                                title={`${files[0].name} (${kb(files[0].size)})`}
+                              >
+                                <FileIcon className="w-3.5 h-3.5 mr-2" />
+                                <span className="max-w-[140px] truncate">{files[0].name}</span>
+                              </Button>
+                              {isAdmin && files[0].id && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 border-red-200 hover:border-red-300"
+                                  onClick={() => handleDeleteMaterial(item.id, files[0].id!)}
+                                  title="자료 삭제"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </Button>
+                              )}
+                            </div>
                           )}
                         </div>
                       </TableCell>
@@ -564,6 +619,34 @@ export default function ShowcaseTechList({
                     {item.title}
                   </div>
                   {item.summary && <div className="text-sm text-gray-600 whitespace-normal break-words">{item.summary}</div>}
+                  <div className="flex flex-wrap gap-2">
+                    {files.length === 0 ? (
+                      <span className="text-xs text-gray-500">자료 없음</span>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="bg-transparent"
+                          onClick={() => downloadMaterial(files[0])}
+                        >
+                          <FileIcon className="w-3.5 h-3.5 mr-1.5" />
+                          <span className="text-xs max-w-[120px] truncate">{files[0].name}</span>
+                        </Button>
+                        {isAdmin && files[0].id && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 border-red-200 hover:border-red-300"
+                            onClick={() => handleDeleteMaterial(item.id, files[0].id!)}
+                            title="자료 삭제"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                  </div>
                   <div className="flex gap-2">
                     <Button size="sm" onClick={() => openExhibitConsultation(item)} className="flex-1">
                       상담신청
@@ -627,16 +710,29 @@ export default function ShowcaseTechList({
                         <div className="flex flex-wrap gap-2 items-center">
                           {files.length === 0 && <span className="text-xs text-gray-500">자료 없음</span>}
                           {files.length > 0 && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="bg-transparent"
-                              onClick={() => downloadMaterial(files[0])}
-                              title={`${files[0].name} (${kb(files[0].size)})`}
-                            >
-                              <FileIcon className="w-3.5 h-3.5 mr-2" />
-                              <span className="max-w-[140px] truncate">{files[0].name}</span>
-                            </Button>
+                            <div className="flex items-center gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="bg-transparent"
+                                onClick={() => downloadMaterial(files[0])}
+                                title={`${files[0].name} (${kb(files[0].size)})`}
+                              >
+                                <FileIcon className="w-3.5 h-3.5 mr-2" />
+                                <span className="max-w-[140px] truncate">{files[0].name}</span>
+                              </Button>
+                              {isAdmin && files[0].id && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 border-red-200 hover:border-red-300"
+                                  onClick={() => handleDeleteMaterial(item.id, files[0].id!)}
+                                  title="자료 삭제"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </Button>
+                              )}
+                            </div>
                           )}
                         </div>
                       </TableCell>

@@ -15,8 +15,9 @@ export async function DELETE(req: NextRequest) {
 
     // 파일이 존재하는지 확인
     const selectSql = `
-      SELECT id FROM pnu_techfair_materials 
-      WHERE id = ? AND is_deleted = FALSE
+      SELECT id, showcase_id, showcase_type, file_name 
+      FROM pnu_techfair_materials 
+      WHERE id = ?
     `
     
     const materials = await query(selectSql, [parseInt(id)]) as any[]
@@ -28,14 +29,15 @@ export async function DELETE(req: NextRequest) {
       )
     }
 
-    // 소프트 삭제: 데이터베이스에서 is_deleted = TRUE로 설정
-    const updateSql = `
-      UPDATE pnu_techfair_materials 
-      SET is_deleted = TRUE, deleted_at = CURRENT_TIMESTAMP 
+    const material = materials[0]
+
+    // 하드 삭제: 데이터베이스에서 완전히 제거
+    const deleteSql = `
+      DELETE FROM pnu_techfair_materials 
       WHERE id = ?
     `
     
-    const result = await query(updateSql, [parseInt(id)]) as any
+    const result = await query(deleteSql, [parseInt(id)]) as any
     
     if (result.affectedRows === 0) {
       return NextResponse.json(
@@ -44,9 +46,16 @@ export async function DELETE(req: NextRequest) {
       )
     }
 
+    // 삭제 성공 시 응답에 삭제된 자료 정보 포함
     return NextResponse.json({
       success: true,
-      message: "자료가 성공적으로 삭제되었습니다."
+      message: "자료가 성공적으로 삭제되었습니다.",
+      deletedMaterial: {
+        id: parseInt(id),
+        showcaseId: material.showcase_id,
+        showcaseType: material.showcase_type,
+        fileName: material.file_name
+      }
     })
     
   } catch (error) {

@@ -1351,10 +1351,10 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                 )}
                 {isPatentLoading ? '새로고침 중...' : '새로고침'}
               </Button>
-              <Button variant="outline" className="flex items-center gap-2 bg-transparent" onClick={handleExcelDownload}>
+              {/* <Button variant="outline" className="flex items-center gap-2 bg-transparent" onClick={handleExcelDownload}>
                 <Download className="w-4 h-4" />
                 특허상담 현황 다운로드
-              </Button>
+              </Button> */}
             </div>
           </div>
 
@@ -1452,10 +1452,10 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                 />
                 <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               </div>
-              <Button variant="outline" className="flex items-center gap-2 bg-transparent" onClick={handleExcelDownload}>
+              {/* <Button variant="outline" className="flex items-center gap-2 bg-transparent" onClick={handleExcelDownload}>
                 <Download className="w-4 h-4" />
                 엑셀 다운로드
-              </Button>
+              </Button> */}
             </div>
           </div>
 

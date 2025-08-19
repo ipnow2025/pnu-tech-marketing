@@ -239,7 +239,7 @@ CREATE TABLE IF NOT EXISTS `pnu_techfair_exhibit_consultations` (
   INDEX `idx_is_deleted` (`is_deleted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='출품 기술 상담신청 정보';
 
--- 발표/출품 자료 업로드 테이블 생성 (BLOB 방식)
+-- 발표/출품 자료 업로드 테이블 생성 (BLOB 방식 - 하드 삭제)
 CREATE TABLE IF NOT EXISTS `pnu_techfair_materials` (
   `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '자료 ID',
   
@@ -260,9 +260,7 @@ CREATE TABLE IF NOT EXISTS `pnu_techfair_materials` (
   `uploaded_by` VARCHAR(100) NULL COMMENT '업로드한 사용자',
   `description` TEXT NULL COMMENT '자료 설명',
   
-  -- 기본 필드
-  `is_deleted` BOOLEAN DEFAULT FALSE COMMENT '삭제 여부',
-  `deleted_at` TIMESTAMP NULL COMMENT '삭제 시간',
+  -- 기본 필드 (하드 삭제 방식)
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '생성 시간',
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 시간',
   
@@ -272,6 +270,5 @@ CREATE TABLE IF NOT EXISTS `pnu_techfair_materials` (
   INDEX `idx_file_name` (`file_name`),
   INDEX `idx_file_type` (`file_type`),
   INDEX `idx_uploaded_by` (`uploaded_by`),
-  INDEX `idx_created_at` (`created_at`),
-  INDEX `idx_is_deleted` (`is_deleted`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='발표/출품 자료 파일 정보 (BLOB 저장)';
+  INDEX `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='발표/출품 자료 파일 정보 (BLOB 저장 - 하드 삭제)';

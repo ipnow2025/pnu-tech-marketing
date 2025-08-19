@@ -40,16 +40,15 @@ export async function POST(req: NextRequest) {
     // 기존 파일이 있는지 확인
     const existingFileSql = `
       SELECT id FROM pnu_techfair_materials 
-      WHERE showcase_id = ? AND is_deleted = FALSE
+      WHERE showcase_id = ?
     `
     const existingFiles = await query(existingFileSql, [parseInt(id)]) as any[]
 
-    // 기존 파일이 있으면 소프트 삭제
+    // 기존 파일이 있으면 하드 삭제
     if (existingFiles.length > 0) {
       const deleteSql = `
-        UPDATE pnu_techfair_materials 
-        SET is_deleted = TRUE, deleted_at = CURRENT_TIMESTAMP 
-        WHERE showcase_id = ? AND is_deleted = FALSE
+        DELETE FROM pnu_techfair_materials 
+        WHERE showcase_id = ?
       `
       await query(deleteSql, [parseInt(id)])
     }

@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
         id, file_name, file_size, file_type, file_extension,
         uploaded_by, description, created_at
       FROM pnu_techfair_materials 
-      WHERE showcase_id = ? AND is_deleted = FALSE 
+      WHERE showcase_id = ?
       ORDER BY created_at DESC
     `
     
