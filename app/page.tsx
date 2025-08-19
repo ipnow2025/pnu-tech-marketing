@@ -201,14 +201,20 @@ return (
       <div className="flex flex-wrap items-center justify-between gap-3 md:gap-4">
         {/* Left: logos */}
         <div className="flex items-center min-w-0">
-          <Image
-            src="/images/pnu-logo.png"
-            alt="부산대학교 산학협력단 - Research and Business Development Foundation, PNU"
-            width={400}
-            height={80}
-            className="h-12 sm:h-14 md:h-16 w-auto"
-            priority
-          />
+          <button
+            onClick={() => setActiveTab('')}
+            className="hover:opacity-80 transition-opacity"
+            aria-label="홈으로 이동"
+          >
+            <Image
+              src="/images/pnu-logo.png"
+              alt="부산대학교 산학협력단 - Research and Business Development Foundation, PNU"
+              width={400}
+              height={80}
+              className="h-12 sm:h-14 md:h-16 w-auto"
+              priority
+            />
+          </button>
           <a
             href="https://techpresso.kr/"
             target="_blank"
