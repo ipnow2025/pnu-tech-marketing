@@ -469,33 +469,33 @@ return (
                 <tbody>
                   <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                     <td className="px-4 md:px-6 py-4 text-sm font-medium text-gray-900">14:00 - 14:20</td>
-                    <td className="px-4 md:px-6 py-4 text-sm text-gray-700">기술이전·사업화 지원제도 소개</td>
-                    <td className="px-4 md:px-6 py-4 text-sm text-gray-700">정해림 차장</td>
-                    <td className="px-4 md:px-6 py-4 text-sm text-gray-500">기술보증기금</td>
+                    <td className="px-4 md:px-6 py-4 text-sm text-gray-700">PNU 기술이전 · 사업화 지원 프로세스 소개</td>
+                    <td className="px-4 md:px-6 py-4 text-sm text-gray-700">최정식 과장</td>
+                    <td className="px-4 md:px-6 py-4 text-sm text-gray-500">부산대학교기술지주㈜</td>
                   </tr>
                   <tr className="bg-blue-50 border-b border-gray-100 hover:bg-blue-100 transition-colors">
                     <td className="px-4 md:px-6 py-4 text-sm font-medium text-gray-900">14:20 - 14:40</td>
-                    <td className="px-4 md:px-6 py-4 text-sm text-gray-700">스마트팩토리, 클라우드 보안</td>
+                    <td className="px-4 md:px-6 py-4 text-sm text-gray-700">AI 기반 스마트팩토리 작업 자동화 기술, 제로 트러스트 클라우드 보안</td>
                     <td className="px-4 md:px-6 py-4 text-sm text-gray-700">최윤호 교수</td>
                     <td className="px-4 md:px-6 py-4 text-sm text-gray-500">부산대학교</td>
                   </tr>
                   <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                     <td className="px-4 md:px-6 py-4 text-sm font-medium text-gray-900">14:40 - 15:00</td>
-                    <td className="px-4 md:px-6 py-4 text-sm text-gray-700">컴퓨터비전, 멀티모달 기반 영상 처리 및 생성</td>
+                    <td className="px-4 md:px-6 py-4 text-sm text-gray-700">데이터 라벨링 없이 영상 속 사물 자동 인식 기술</td>
                     <td className="px-4 md:px-6 py-4 text-sm text-gray-700">전상률 교수</td>
                     <td className="px-4 md:px-6 py-4 text-sm text-gray-500">부산대학교</td>
                   </tr>
                   <tr className="bg-blue-50 border-b border-gray-100 hover:bg-blue-100 transition-colors">
                     <td className="px-4 md:px-6 py-4 text-sm font-medium text-gray-900">15:00 - 15:20</td>
                     <td className="px-4 md:px-6 py-4 text-sm text-gray-700">
-                      안티드론 시스템 (드론 통신 신호 분석 및 드론 탐지/식별기술)
+                      드론 통신신호 분석을 이용한 드론 탐지 방법 및 장치
                     </td>
                     <td className="px-4 md:px-6 py-4 text-sm text-gray-700">김정창 교수</td>
                     <td className="px-4 md:px-6 py-4 text-sm text-gray-500">국립한국해양대학교</td>
                   </tr>
                   <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                     <td className="px-4 md:px-6 py-4 text-sm font-medium text-gray-900">15:20 - 15:40</td>
-                    <td className="px-4 md:px-6 py-4 text-sm text-gray-700">AI 원천 및 응용기술, 해양 AI 특화 등</td>
+                    <td className="px-4 md:px-6 py-4 text-sm text-gray-700">인공신경망 기반 집중도 분석 및 학습 집중도 모니터링 시스템</td>
                     <td className="px-4 md:px-6 py-4 text-sm text-gray-700">김민호 교수</td>
                     <td className="px-4 md:px-6 py-4 text-sm text-gray-500">국립한국해양대학교</td>
                   </tr>
