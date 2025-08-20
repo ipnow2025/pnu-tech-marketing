@@ -67,6 +67,13 @@ export function PatentConsultationModal({
 
     // 상담 내용
     technologyContent: "",
+
+    // 추가 서비스 정보
+    patentUtilizationReport: false,
+    patentValueEvaluationReport: false,
+    annualFeeEstimation: false,
+    patentApplicationNumber1: "",
+    patentApplicationNumber2: "",
   })
 
   // 특허가 없어도(발표 상담 등) 열릴 수 있도록 변경
@@ -118,7 +125,14 @@ export function PatentConsultationModal({
           email: formData.email,
           
           // 상담 내용
-          technologyContent: formData.technologyContent
+          technologyContent: formData.technologyContent,
+
+          // 추가 서비스 정보
+          patentUtilizationReport: formData.patentUtilizationReport,
+          patentValueEvaluationReport: formData.patentValueEvaluationReport,
+          annualFeeEstimation: formData.annualFeeEstimation,
+          patentApplicationNumber1: formData.patentApplicationNumber1,
+          patentApplicationNumber2: formData.patentApplicationNumber2,
         }
       } else if (exhibit) {
         // 출품 기술 상담신청
@@ -150,7 +164,14 @@ export function PatentConsultationModal({
           email: formData.email,
           
           // 상담 내용
-          technologyContent: formData.technologyContent
+          technologyContent: formData.technologyContent,
+
+          // 추가 서비스 정보
+          patentUtilizationReport: formData.patentUtilizationReport,
+          patentValueEvaluationReport: formData.patentValueEvaluationReport,
+          annualFeeEstimation: formData.annualFeeEstimation,
+          patentApplicationNumber1: formData.patentApplicationNumber1,
+          patentApplicationNumber2: formData.patentApplicationNumber2,
         }
       } else if (patent) {
         // 특허 상담신청
@@ -183,7 +204,14 @@ export function PatentConsultationModal({
           email: formData.email,
           
           // 상담 내용
-          technologyContent: formData.technologyContent
+          technologyContent: formData.technologyContent,
+
+          // 추가 서비스 정보
+          patentUtilizationReport: formData.patentUtilizationReport,
+          patentValueEvaluationReport: formData.patentValueEvaluationReport,
+          annualFeeEstimation: formData.annualFeeEstimation,
+          patentApplicationNumber1: formData.patentApplicationNumber1,
+          patentApplicationNumber2: formData.patentApplicationNumber2,
         }
       }
 
@@ -218,6 +246,11 @@ export function PatentConsultationModal({
           contact: "",
           email: "",
           technologyContent: "",
+          patentUtilizationReport: false,
+          patentValueEvaluationReport: false,
+          annualFeeEstimation: false,
+          patentApplicationNumber1: "",
+          patentApplicationNumber2: "",
         })
       } else {
         alert(`상담신청 제출에 실패했습니다: ${result.error}`)
@@ -228,7 +261,7 @@ export function PatentConsultationModal({
     }
   }
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
@@ -480,6 +513,71 @@ export function PatentConsultationModal({
                   required
                 />
               </div>
+            </div>
+          </div>
+
+           {/* 추가 서비스 */}
+           <div className="border rounded-lg p-4">
+            <h3 className="text-lg font-semibold mb-4">사전등록기업 특별혜택 (~8/22)</h3>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="flex items-start space-x-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.patentUtilizationReport}
+                    onChange={(e) => handleInputChange("patentUtilizationReport", e.target.checked)}
+                    className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  />
+                  <div className="flex-1">
+                    <div className="text-sm font-medium text-gray-700">특허활용보고서</div>
+                    <div className="text-xs text-gray-500 mb-2">특허 기술의 활용 방안 및 사업화 전략 분석</div>
+                  </div>
+                </label>
+                <div className="ml-7">
+                  <Input
+                    value={formData.patentApplicationNumber1}
+                    onChange={(e) => handleInputChange("patentApplicationNumber1", e.target.value)}
+                    placeholder="특허출원번호를 입력하세요 (예: 10-2023-0123456)"
+                    className="text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="flex items-start space-x-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.patentValueEvaluationReport}
+                    onChange={(e) => handleInputChange("patentValueEvaluationReport", e.target.checked)}
+                    className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  />
+                  <div className="flex-1">
+                    <div className="text-sm font-medium text-gray-700">특허가치평가보고서</div>
+                    <div className="text-xs text-gray-500 mb-2">특허의 기술적, 경제적 가치 평가 및 분석</div>
+                  </div>
+                </label>
+                <div className="ml-7">
+                  <Input
+                    value={formData.patentApplicationNumber2}
+                    onChange={(e) => handleInputChange("patentApplicationNumber2", e.target.value)}
+                    placeholder="특허출원번호를 입력하세요 (예: 10-2023-0123456)"
+                    className="text-sm"
+                  />
+                </div>
+              </div>
+
+              <label className="flex items-start space-x-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.annualFeeEstimation}
+                  onChange={(e) => handleInputChange("annualFeeEstimation", e.target.checked)}
+                  className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <div>
+                  <div className="text-sm font-medium text-gray-700">연차료 예상비용 측정</div>
+                  <div className="text-xs text-gray-500">특허 유지를 위한 연차료 비용 산정 및 예측</div>
+                </div>
+              </label>
             </div>
           </div>
 

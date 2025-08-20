@@ -10,6 +10,7 @@ interface Patent {
   registrationNumber: string
   applicationDate: string
   expiryDate: string
+  gpt_idx: string
 }
 
 // 특허 데이터
@@ -25,6 +26,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2075095",
     applicationDate: "2013-04-05",
     expiryDate: "2025-02-03",
+    gpt_idx: "9001"
   },
   {
     techField: "화학",
@@ -37,6 +39,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2075840",
     applicationDate: "2018-07-27",
     expiryDate: "2025-02-04",
+    gpt_idx: "8157"
   },
   {
     techField: "전기/전자",
@@ -49,6 +52,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2075831",
     applicationDate: "2018-01-25",
     expiryDate: "2025-02-04",
+    gpt_idx: "8234"
   },
   {
     techField: "정보/통신",
@@ -61,6 +65,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2078770",
     applicationDate: "2018-07-04",
     expiryDate: "2025-02-12",
+    gpt_idx: "8166"
   },
   {
     techField: "전기/전자",
@@ -73,6 +78,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2079427",
     applicationDate: "2017-10-25",
     expiryDate: "2025-02-13",
+    gpt_idx: "8307"
   },
   {
     techField: "정보/통신",
@@ -85,6 +91,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2079609",
     applicationDate: "2018-03-09",
     expiryDate: "2025-02-14",
+    gpt_idx: "8212"
   },
   {
     techField: "화학",
@@ -97,6 +104,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2079690",
     applicationDate: "2018-03-22",
     expiryDate: "2025-02-14",
+    gpt_idx: "8201"
   },
   {
     techField: "재료",
@@ -109,6 +117,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1951022",
     applicationDate: "2016-07-28",
     expiryDate: "2025-02-15",
+    gpt_idx: "8553"
   },
   {
     techField: "전기/전자",
@@ -121,6 +130,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1833968",
     applicationDate: "2016-09-21",
     expiryDate: "2025-02-23",
+    gpt_idx: "8521"
   },
   {
     techField: "전기/전자",
@@ -133,6 +143,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2083442",
     applicationDate: "2018-06-26",
     expiryDate: "2025-02-25",
+    gpt_idx: "8169"
   },
   {
     techField: "기타",
@@ -145,6 +156,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2084587",
     applicationDate: "2018-06-26",
     expiryDate: "2025-02-27",
+    gpt_idx: "8172"
   },
   {
     techField: "생명과학",
@@ -157,6 +169,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1954747",
     applicationDate: "2018-03-14",
     expiryDate: "2025-02-27",
+    gpt_idx: "8208"
   },
   {
     techField: "기계",
@@ -169,6 +182,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2084589",
     applicationDate: "2018-10-05",
     expiryDate: "2025-02-27",
+    gpt_idx: "8130"
   },
   {
     techField: "정보/통신",
@@ -181,6 +195,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1955252",
     applicationDate: "2018-07-11",
     expiryDate: "2025-02-28",
+    gpt_idx: "8164"
   },
   {
     techField: "기타",
@@ -193,11 +208,11 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2085269",
     applicationDate: "2018-09-14",
     expiryDate: "2025-02-28",
+    gpt_idx: "8137"
   },
   {
     techField: "기계",
-    patentName:
-      "국소 2상 유동의 변수 측정용 광섬유 프로브 및 그 제조 방법과, 그 광섬유 프로브를 이용한 유체의 변수 측정 방법",
+    patentName: "국소 2상 유동의 변수 측정용 광섬유 프로브 및 그 제조 방법과, 그 광섬유 프로브를 이용한 유체의 변수 측정 방법",
     transfer: true,
     exclusive: false,
     normal: false,
@@ -206,6 +221,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2063963",
     applicationDate: "2019-01-10",
     expiryDate: "2025-01-02",
+    gpt_idx: "8065"
   },
   {
     techField: "정보/통신",
@@ -218,6 +234,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2064653",
     applicationDate: "2017-12-13",
     expiryDate: "2025-01-03",
+    gpt_idx: "8274"
   },
   {
     techField: "정보/통신",
@@ -230,6 +247,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1817879",
     applicationDate: "2016-11-18",
     expiryDate: "2025-01-05",
+    gpt_idx: "8493"
   },
   {
     techField: "전기/전자",
@@ -242,6 +260,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1940736",
     applicationDate: "2017-02-17",
     expiryDate: "2025-01-15",
+    gpt_idx: "8423"
   },
   {
     techField: "기타",
@@ -254,6 +273,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1941359",
     applicationDate: "2017-01-20",
     expiryDate: "2025-01-16",
+    gpt_idx: "8440"
   },
   {
     techField: "기타",
@@ -266,8 +286,8 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1942874",
     applicationDate: "2016-12-27",
     expiryDate: "2025-01-22",
+    gpt_idx: "8466"
   },
-  // 추가 특허 데이터
   {
     techField: "기계",
     patentName: "탄성 스프링과 강재댐퍼를 구비한 내진 창호 시스템",
@@ -279,6 +299,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1943572",
     applicationDate: "2017-06-21",
     expiryDate: "2025-01-23",
+    gpt_idx: "8369"
   },
   {
     techField: "전기/전자",
@@ -291,6 +312,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1488272",
     applicationDate: "2013-07-30",
     expiryDate: "2025-01-26",
+    gpt_idx: "8982"
   },
   {
     techField: "기계",
@@ -303,6 +325,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1944913",
     applicationDate: "2017-09-29",
     expiryDate: "2025-01-28",
+    gpt_idx: "8315"
   },
   {
     techField: "재료",
@@ -315,6 +338,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2072378",
     applicationDate: "2018-09-12",
     expiryDate: "2025-01-28",
+    gpt_idx: "8141"
   },
   {
     techField: "화학",
@@ -327,6 +351,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1945826",
     applicationDate: "2017-06-30",
     expiryDate: "2025-01-30",
+    gpt_idx: "8365"
   },
   {
     techField: "재료",
@@ -339,6 +364,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1946277",
     applicationDate: "2017-04-19",
     expiryDate: "2025-01-31",
+    gpt_idx: "8395"
   },
   {
     techField: "기타",
@@ -351,6 +377,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1946731",
     applicationDate: "2017-12-05",
     expiryDate: "2025-01-31",
+    gpt_idx: "8283"
   },
   {
     techField: "기계",
@@ -363,6 +390,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1575488",
     applicationDate: "2014-06-12",
     expiryDate: "2024-12-01",
+    gpt_idx: "8891"
   },
   {
     techField: "정보/통신",
@@ -375,6 +403,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1932928",
     applicationDate: "2014-10-27",
     expiryDate: "2024-12-20",
+    gpt_idx: "8845"
   },
   {
     techField: "화학",
@@ -387,11 +416,11 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2054559",
     applicationDate: "2017-11-01",
     expiryDate: "2024-12-04",
+    gpt_idx: "8297"
   },
   {
     techField: "화학",
-    patentName:
-      "화재로 인한 콘크리트 건물의 열화 정도를 신속 판별하기 위한 감온변색 가능한 무기 결합재 및 이의 양생 방법",
+    patentName: "화재로 인한 콘크리트 건물의 열화 정도를 신속 판별하기 위한 감온변색 가능한 무기 결합재 및 이의 양생 방법",
     transfer: true,
     exclusive: false,
     normal: false,
@@ -400,6 +429,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2056563",
     applicationDate: "2019-03-21",
     expiryDate: "2024-12-10",
+    gpt_idx: "8022"
   },
   {
     techField: "기계",
@@ -412,6 +442,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2056863",
     applicationDate: "2018-06-04",
     expiryDate: "2024-12-11",
+    gpt_idx: "8180"
   },
   {
     techField: "화학",
@@ -424,6 +455,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2060523",
     applicationDate: "2017-10-11",
     expiryDate: "2024-12-23",
+    gpt_idx: "8309"
   },
   {
     techField: "화학",
@@ -436,6 +468,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2060527",
     applicationDate: "2017-10-11",
     expiryDate: "2024-12-23",
+    gpt_idx: "8310"
   },
   {
     techField: "건설/교통",
@@ -448,6 +481,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2062254",
     applicationDate: "2017-10-26",
     expiryDate: "2024-12-27",
+    gpt_idx: "8305"
   },
   {
     techField: "생명과학",
@@ -460,6 +494,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2062980",
     applicationDate: "2018-04-11",
     expiryDate: "2024-12-30",
+    gpt_idx: "8196"
   },
   {
     techField: "정보/통신",
@@ -472,6 +507,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2063184",
     applicationDate: "2017-12-29",
     expiryDate: "2024-12-31",
+    gpt_idx: "8251"
   },
   {
     techField: "화학",
@@ -484,6 +520,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2042340",
     applicationDate: "2018-03-22",
     expiryDate: "2024-11-01",
+    gpt_idx: "8202"
   },
   {
     techField: "재료",
@@ -496,6 +533,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1459739",
     applicationDate: "2013-04-12",
     expiryDate: "2024-11-03",
+    gpt_idx: "8999"
   },
   {
     techField: "화학",
@@ -508,6 +546,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1567779",
     applicationDate: "2014-09-16",
     expiryDate: "2024-11-04",
+    gpt_idx: "8855"
   },
   {
     techField: "기타",
@@ -520,11 +559,11 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1800351",
     applicationDate: "2015-02-11",
     expiryDate: "2024-11-16",
+    gpt_idx: "8804"
   },
   {
     techField: "정보/통신",
-    patentName:
-      "인구통계학적 요소 및 운동학적 요소를 기반으로 피험자의 골격근 단면적 산출 모델을 결정하는 방법 및 장치",
+    patentName: "인구통계학적 요소 및 운동학적 요소를 기반으로 피험자의 골격근 단면적 산출 모델을 결정하는 방법 및 장치",
     transfer: true,
     exclusive: false,
     normal: false,
@@ -533,6 +572,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1921734",
     applicationDate: "2015-11-26",
     expiryDate: "2024-11-19",
+    gpt_idx: "8662"
   },
   {
     techField: "전기/전자",
@@ -545,6 +585,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1679749",
     applicationDate: "2015-01-07",
     expiryDate: "2024-11-21",
+    gpt_idx: "8820"
   },
   {
     techField: "보건의료",
@@ -557,6 +598,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1923647",
     applicationDate: "2016-12-29",
     expiryDate: "2024-11-23",
+    gpt_idx: "8455"
   },
   {
     techField: "정보/통신",
@@ -569,6 +611,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1924125",
     applicationDate: "2016-12-23",
     expiryDate: "2024-11-26",
+    gpt_idx: "8469"
   },
   {
     techField: "전기/전자",
@@ -581,6 +624,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1574183",
     applicationDate: "2014-05-19",
     expiryDate: "2024-11-27",
+    gpt_idx: "8895"
   },
   {
     techField: "정보/통신",
@@ -593,6 +637,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2051761",
     applicationDate: "2018-11-30",
     expiryDate: "2024-11-27",
+    gpt_idx: "8099"
   },
   {
     techField: "정보/통신",
@@ -605,6 +650,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1925190",
     applicationDate: "2016-12-14",
     expiryDate: "2024-11-28",
+    gpt_idx: "8477"
   },
   {
     techField: "전기/전자",
@@ -617,6 +663,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1682550",
     applicationDate: "2014-12-09",
     expiryDate: "2024-11-29",
+    gpt_idx: "8829"
   },
   {
     techField: "재료",
@@ -629,6 +676,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1449127",
     applicationDate: "2012-09-28",
     expiryDate: "2024-10-01",
+    gpt_idx: "9047"
   },
   {
     techField: "보건의료",
@@ -641,6 +689,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2030608",
     applicationDate: "2018-10-16",
     expiryDate: "2024-10-02",
+    gpt_idx: "8122"
   },
   {
     techField: "기타",
@@ -653,6 +702,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1906261",
     applicationDate: "2018-07-11",
     expiryDate: "2024-10-02",
+    gpt_idx: "8165"
   },
   {
     techField: "보건의료",
@@ -665,6 +715,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1906208",
     applicationDate: "2017-04-13",
     expiryDate: "2024-10-02",
+    gpt_idx: "8399"
   },
   {
     techField: "기계",
@@ -677,6 +728,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1907104",
     applicationDate: "2016-11-22",
     expiryDate: "2024-10-04",
+    gpt_idx: "8490"
   },
   {
     techField: "기계",
@@ -689,6 +741,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1908259",
     applicationDate: "2018-02-26",
     expiryDate: "2024-10-08",
+    gpt_idx: "8217"
   },
   {
     techField: "전기/전자",
@@ -701,6 +754,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2033573",
     applicationDate: "2018-01-24",
     expiryDate: "2024-10-11",
+    gpt_idx: "8236"
   },
   {
     techField: "정보/통신",
@@ -713,6 +767,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1787868",
     applicationDate: "2016-01-26",
     expiryDate: "2024-10-12",
+    gpt_idx: "8631"
   },
   {
     techField: "정보/통신",
@@ -725,6 +780,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2037453",
     applicationDate: "2019-07-03",
     expiryDate: "2024-10-22",
+    gpt_idx: "7974"
   },
   {
     techField: "전기/전자",
@@ -737,11 +793,11 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1793233",
     applicationDate: "2016-07-19",
     expiryDate: "2024-10-27",
+    gpt_idx: "8557"
   },
   {
     techField: "화학",
-    patentName:
-      "퍼플루오로데실티오기를 가지는 신규 디아민, 이의 제조 방법, 상기 디아민으로부터 제조된 불소계 폴리이미드 필름",
+    patentName: "퍼플루오로데실티오기를 가지는 신규 디아민, 이의 제조 방법, 상기 디아민으로부터 제조된 불소계 폴리이미드 필름",
     transfer: true,
     exclusive: false,
     normal: false,
@@ -750,6 +806,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1776243",
     applicationDate: "2015-06-17",
     expiryDate: "2024-09-01",
+    gpt_idx: "8745"
   },
   {
     techField: "정보/통신",
@@ -762,6 +819,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2021700",
     applicationDate: "2018-05-30",
     expiryDate: "2024-09-06",
+    gpt_idx: "8181"
   },
   {
     techField: "화학",
@@ -774,6 +832,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1777725",
     applicationDate: "2016-03-18",
     expiryDate: "2024-09-06",
+    gpt_idx: "8597"
   },
   {
     techField: "보건의료",
@@ -786,6 +845,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2021663",
     applicationDate: "2017-09-26",
     expiryDate: "2024-09-06",
+    gpt_idx: "8322"
   },
   {
     techField: "정보/통신",
@@ -798,6 +858,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1899640",
     applicationDate: "2016-01-26",
     expiryDate: "2024-09-11",
+    gpt_idx: "8630"
   },
   {
     techField: "기타",
@@ -810,6 +871,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1900706",
     applicationDate: "2017-08-10",
     expiryDate: "2024-09-14",
+    gpt_idx: "8349"
   },
   {
     techField: "화학",
@@ -822,6 +884,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1900695",
     applicationDate: "2016-06-23",
     expiryDate: "2024-09-14",
+    gpt_idx: "8569"
   },
   {
     techField: "건설/교통",
@@ -834,6 +897,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1900704",
     applicationDate: "2017-08-10",
     expiryDate: "2024-09-14",
+    gpt_idx: "8348"
   },
   {
     techField: "정보/통신",
@@ -846,6 +910,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1901397",
     applicationDate: "2016-12-06",
     expiryDate: "2024-09-17",
+    gpt_idx: "8482"
   },
   {
     techField: "정보/통신",
@@ -858,6 +923,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2024829",
     applicationDate: "2018-02-14",
     expiryDate: "2024-09-18",
+    gpt_idx: "8224"
   },
   {
     techField: "기계",
@@ -870,6 +936,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1782721",
     applicationDate: "2016-03-02",
     expiryDate: "2024-09-21",
+    gpt_idx: "8608"
   },
   {
     techField: "재료",
@@ -882,6 +949,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2008583",
     applicationDate: "2017-12-05",
     expiryDate: "2024-08-01",
+    gpt_idx: "8284"
   },
   {
     techField: "정보/통신",
@@ -894,6 +962,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1647188",
     applicationDate: "2014-07-24",
     expiryDate: "2024-08-03",
+    gpt_idx: "8871"
   },
   {
     techField: "생명과학",
@@ -906,6 +975,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2009455",
     applicationDate: "2017-07-10",
     expiryDate: "2024-08-05",
+    gpt_idx: "8361"
   },
   {
     techField: "정보/통신",
@@ -918,6 +988,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2009574",
     applicationDate: "2017-12-01",
     expiryDate: "2024-08-05",
+    gpt_idx: "8286"
   },
   {
     techField: "화학",
@@ -930,6 +1001,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2011251",
     applicationDate: "2017-12-06",
     expiryDate: "2024-08-09",
+    gpt_idx: "8280"
   },
   {
     techField: "화학",
@@ -942,6 +1014,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2011252",
     applicationDate: "2017-07-13",
     expiryDate: "2024-08-09",
+    gpt_idx: "8360"
   },
   {
     techField: "정보/통신",
@@ -954,11 +1027,11 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1889645",
     applicationDate: "2017-02-06",
     expiryDate: "2024-08-10",
+    gpt_idx: "8433"
   },
   {
     techField: "화학",
-    patentName:
-      "금속산화물 및 유기리간드를 포함하는 금속-유기 복합체, 이를 이용한 슈퍼커패시터용 전극, 및 이의 제조방법",
+    patentName: "금속산화물 및 유기리간드를 포함하는 금속-유기 복합체, 이를 이용한 슈퍼커패시터용 전극, 및 이의 제조방법",
     transfer: true,
     exclusive: false,
     normal: false,
@@ -967,6 +1040,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2012106",
     applicationDate: "2017-12-28",
     expiryDate: "2024-08-12",
+    gpt_idx: "8254"
   },
   {
     techField: "건설/교통",
@@ -979,6 +1053,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1431657",
     applicationDate: "2012-11-28",
     expiryDate: "2024-08-12",
+    gpt_idx: "9034"
   },
   {
     techField: "전기/전자",
@@ -991,6 +1066,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2014057",
     applicationDate: "2018-02-21",
     expiryDate: "2024-08-20",
+    gpt_idx: "8220"
   },
   {
     techField: "보건의료",
@@ -1003,6 +1079,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2014604",
     applicationDate: "2017-10-31",
     expiryDate: "2024-08-20",
+    gpt_idx: "8301"
   },
   {
     techField: "화학",
@@ -1015,6 +1092,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2015093",
     applicationDate: "2017-11-21",
     expiryDate: "2024-08-21",
+    gpt_idx: "8289"
   },
   {
     techField: "기계",
@@ -1027,6 +1105,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2016270",
     applicationDate: "2018-12-28",
     expiryDate: "2024-08-23",
+    gpt_idx: "8080"
   },
   {
     techField: "기계",
@@ -1039,6 +1118,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1652865",
     applicationDate: "2014-08-27",
     expiryDate: "2024-08-25",
+    gpt_idx: "8859"
   },
   {
     techField: "보건의료",
@@ -1051,6 +1131,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2016421",
     applicationDate: "2016-10-28",
     expiryDate: "2024-08-26",
+    gpt_idx: "8498"
   },
   {
     techField: "기계",
@@ -1063,6 +1144,7 @@ export const patentData: Patent[] = [
     registrationNumber: "10-1894377",
     applicationDate: "2017-03-14",
     expiryDate: "2024-08-28",
+    gpt_idx: "8413"
   },
   {
     techField: "재료",
@@ -1075,5 +1157,6 @@ export const patentData: Patent[] = [
     registrationNumber: "10-2018368",
     applicationDate: "2019-01-16",
     expiryDate: "2024-08-29",
+    gpt_idx: "8064"
   },
 ]

@@ -33,7 +33,14 @@ export async function POST(request: NextRequest) {
       email,
       
       // 상담 내용
-      technologyContent
+      technologyContent,
+
+      // 추가 서비스 정보
+      patentUtilizationReport,
+      patentValueEvaluationReport,
+      annualFeeEstimation,
+      patentApplicationNumber1,
+      patentApplicationNumber2
     } = body;
 
     // 필수 필드 검증
@@ -68,8 +75,13 @@ export async function POST(request: NextRequest) {
         mobile_phone,
         email,
         technology_content,
+        patent_utilization_report,
+        patent_value_evaluation_report,
+        annual_fee_estimation,
+        patent_application_number1,
+        patent_application_number2,
         applied_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const params = [
@@ -94,6 +106,11 @@ export async function POST(request: NextRequest) {
       mobilePhone,
       email,
       technologyContent,
+      patentUtilizationReport || false,
+      patentValueEvaluationReport || false,
+      annualFeeEstimation || false,
+      patentApplicationNumber1 || null,
+      patentApplicationNumber2 || null,
       new Date().toISOString().split('T')[0]
     ];
 

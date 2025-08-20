@@ -12,6 +12,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMe
 import { patentData } from "./patent-data"
 import type { Patent } from "./patent-types"
 import { PatentConsultationModal } from "./patent-consultation-modal"
+import { PatentReportModal } from "./patent-report-modal"
 import { useEffect } from "react"
 
 interface PatentTableProps {
@@ -41,7 +42,6 @@ export function PatentTable({ onConsultationSubmit }: PatentTableProps) {
 
   const handleConsultationClick = (patent: Patent, e: React.MouseEvent) => {
     e.stopPropagation()
-    setSelectedPatent(patent)
     setShowConsultationModal(true)
   }
 
@@ -139,7 +139,14 @@ export function PatentTable({ onConsultationSubmit }: PatentTableProps) {
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button size="sm" className="flex-1" onClick={(e) => handleConsultationClick(p, e)}>
+                <Button 
+                  size="sm" 
+                  className="flex-1" 
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleConsultationClick(p, e)
+                  }}
+                >
                   상담신청
                 </Button>
               </div>
@@ -173,18 +180,17 @@ export function PatentTable({ onConsultationSubmit }: PatentTableProps) {
                     filteredPatents.map((patent, index) => (
                       <TableRow
                         key={index}
-                        className={`cursor-pointer transition-colors ${
+                        className={`transition-colors ${
                           selectedPatent?.patentName === patent.patentName && !showConsultationModal
                             ? "bg-blue-50 border-l-4 border-l-blue-500"
                             : index % 2 === 0
                             ? "bg-white hover:bg-gray-50"
                             : "bg-gray-50 hover:bg-gray-100"
                         }`}
-                        onClick={() => showPatentDetail(patent)}
                       >
                         <TableCell className="text-center font-medium">{index + 1}</TableCell>
                         <TableCell className="font-medium break-keep whitespace-nowrap">{patent.techField}</TableCell>
-                        <TableCell className="text-blue-600 hover:underline cursor-pointer font-medium break-keep whitespace-nowrap md:whitespace-normal">
+                        <TableCell className="text-blue-600 hover:underline cursor-pointer font-medium break-keep whitespace-nowrap md:whitespace-normal" onClick={() => showPatentDetail(patent)}>
                           {patent.patentName}
                         </TableCell>
                         <TableCell className="font-semibold text-green-600 whitespace-nowrap">{patent.fee}</TableCell>
@@ -212,79 +218,12 @@ export function PatentTable({ onConsultationSubmit }: PatentTableProps) {
           </div>
         </div>
 
-        {/* Side panel (unchanged) */}
-        {selectedPatent && !showConsultationModal && (
-          <div 
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-            onClick={() => setSelectedPatent(null)} // 배경 클릭 시 모달 닫기
-          >
-            <div 
-              className="bg-white rounded-lg shadow-xl max-w-xl w-full max-h-[90vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()} // 모달 내부 클릭 시 이벤트 전파 방지
-            >
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-lg font-bold text-gray-900 leading-tight break-keep">{selectedPatent.patentName}</h3>
-                  <Button variant="ghost" size="sm" onClick={() => setSelectedPatent(null)} className="ml-2 flex-shrink-0">
-                    <X className="h-4 h-4" />
-                  </Button>
-                </div>
-
-                <div className="space-y-6">
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="text-sm font-semibold text-gray-500 mb-1">기술분야</h4>
-                      <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full break-keep">
-                        {selectedPatent.techField}
-                      </span>
-                    </div>
-
-                    <div>
-                      <h4 className="text-sm font-semibold text-gray-500 mb-1">기술료</h4>
-                      <p className="text-xl font-bold text-green-600">{selectedPatent.fee}</p>
-                    </div>
-
-                    <div>
-                      <h4 className="text-sm font-semibold text-gray-500 mb-1">거래유형</h4>
-                      <span className="inline-block px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">
-                        기술이전 (양수) 가능
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="border-t pt-4 space-y-3">
-                    <div className="grid grid-cols-1 gap-3">
-                      <div>
-                        <h4 className="text-sm font-semibold text-gray-500">출원번호</h4>
-                        <p className="text-sm text-gray-900 font-mono">{selectedPatent.applicationNumber}</p>
-                      </div>
-                      <div>
-                        <h4 className="text-sm font-semibold text-gray-500">등록번호</h4>
-                        <p className="text-sm text-gray-900 font-mono">{selectedPatent.registrationNumber}</p>
-                      </div>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <h4 className="text-sm font-semibold text-gray-500">출원일자</h4>
-                          <p className="text-sm text-gray-900">{selectedPatent.applicationDate}</p>
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-semibold text-gray-500">만료일</h4>
-                          <p className="text-sm text-gray-900">{selectedPatent.expiryDate}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="border-t pt-4 space-y-2">
-                    <Button className="w-full" onClick={(e) => handleConsultationClick(selectedPatent, e as any)}>
-                      상담신청
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* 특허 상세 모달 */}
+        <PatentReportModal 
+          isOpen={!!selectedPatent && !showConsultationModal} 
+          onClose={() => setSelectedPatent(null)} 
+          patent={selectedPatent} 
+        />
       </div>
 
       {/* 상담신청 모달 */}

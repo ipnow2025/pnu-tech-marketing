@@ -18,6 +18,13 @@ CREATE TABLE IF NOT EXISTS `pnu_techfair_participant_applications` (
   `mobile_phone` VARCHAR(20) NOT NULL COMMENT '휴대폰번호',
   `email` VARCHAR(255) NOT NULL COMMENT '이메일',
   
+  -- 추가 서비스 정보
+  `patent_utilization_report` BOOLEAN DEFAULT FALSE COMMENT '특허활용보고서',
+  `patent_value_evaluation_report` BOOLEAN DEFAULT FALSE COMMENT '특허가치평가보고서',
+  `annual_fee_estimation` BOOLEAN DEFAULT FALSE COMMENT '연차료 예상비용 측정',
+  `patent_application_number1` VARCHAR(50) NULL COMMENT '특허출원번호1',
+  `patent_application_number2` VARCHAR(50) NULL COMMENT '특허출원번호2',
+  
   -- 기본 필드
   `is_deleted` BOOLEAN DEFAULT FALSE COMMENT '삭제 여부',
   `deleted_at` TIMESTAMP NULL COMMENT '삭제 시간',
@@ -55,6 +62,13 @@ CREATE TABLE IF NOT EXISTS `pnu_techfair_technology_consultations` (
   -- 기술상담 정보
   `desired_technology` VARCHAR(255) NOT NULL COMMENT '희망기술명',
   `technology_requirements` TEXT NOT NULL COMMENT '수요기술 내용',
+
+  -- 추가 서비스 정보
+  `patent_utilization_report` BOOLEAN DEFAULT FALSE COMMENT '특허활용보고서',
+  `patent_value_evaluation_report` BOOLEAN DEFAULT FALSE COMMENT '특허가치평가보고서',
+  `annual_fee_estimation` BOOLEAN DEFAULT FALSE COMMENT '연차료 예상비용 측정',
+  `patent_application_number1` VARCHAR(50) NULL COMMENT '특허출원번호1',
+  `patent_application_number2` VARCHAR(50) NULL COMMENT '특허출원번호2',
   
   -- 기본 필드
   `is_deleted` BOOLEAN DEFAULT FALSE COMMENT '삭제 여부',
@@ -103,6 +117,13 @@ CREATE TABLE IF NOT EXISTS `pnu_techfair_patent_consultations` (
   
   -- 상담 내용
   `technology_content` TEXT NOT NULL COMMENT '기술 도입 목적 및 적용 분야',
+  
+  -- 추가 서비스 정보
+  `patent_utilization_report` BOOLEAN DEFAULT FALSE COMMENT '특허활용보고서',
+  `patent_value_evaluation_report` BOOLEAN DEFAULT FALSE COMMENT '특허가치평가보고서',
+  `annual_fee_estimation` BOOLEAN DEFAULT FALSE COMMENT '연차료 예상비용 측정',
+  `patent_application_number1` VARCHAR(50) NULL COMMENT '특허출원번호1',
+  `patent_application_number2` VARCHAR(50) NULL COMMENT '특허출원번호2',
   
   -- 상담 상태
   `consultation_type` VARCHAR(50) DEFAULT '기술상담' COMMENT '상담유형',
@@ -159,6 +180,13 @@ CREATE TABLE IF NOT EXISTS `pnu_techfair_presentation_consultations` (
   -- 상담 내용
   `technology_content` TEXT NOT NULL COMMENT '기술 도입 목적 및 적용 분야',
   
+  -- 추가 서비스 정보
+  `patent_utilization_report` BOOLEAN DEFAULT FALSE COMMENT '특허활용보고서',
+  `patent_value_evaluation_report` BOOLEAN DEFAULT FALSE COMMENT '특허가치평가보고서',
+  `annual_fee_estimation` BOOLEAN DEFAULT FALSE COMMENT '연차료 예상비용 측정',
+  `patent_application_number1` VARCHAR(50) NULL COMMENT '특허출원번호1',
+  `patent_application_number2` VARCHAR(50) NULL COMMENT '특허출원번호2',
+  
   -- 상담 상태
   `consultation_type` VARCHAR(50) DEFAULT '발표상담' COMMENT '상담유형',
   `status` VARCHAR(20) DEFAULT '대기' COMMENT '상담상태',
@@ -214,6 +242,13 @@ CREATE TABLE IF NOT EXISTS `pnu_techfair_exhibit_consultations` (
   
   -- 상담 내용
   `technology_content` TEXT NOT NULL COMMENT '기술 도입 목적 및 적용 분야',
+
+  -- 추가 서비스 정보
+  `patent_utilization_report` BOOLEAN DEFAULT FALSE COMMENT '특허활용보고서',
+  `patent_value_evaluation_report` BOOLEAN DEFAULT FALSE COMMENT '특허가치평가보고서',
+  `annual_fee_estimation` BOOLEAN DEFAULT FALSE COMMENT '연차료 예상비용 측정',
+  `patent_application_number1` VARCHAR(50) NULL COMMENT '특허출원번호1',
+  `patent_application_number2` VARCHAR(50) NULL COMMENT '특허출원번호2',
   
   -- 상담 상태
   `consultation_type` VARCHAR(50) DEFAULT '출품상담' COMMENT '상담유형',

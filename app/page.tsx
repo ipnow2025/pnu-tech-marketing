@@ -30,7 +30,13 @@ const [participantForm, setParticipantForm] = useState({
   contactName: '',
   departmentPosition: '',
   mobilePhone: '',
-  email: ''
+  email: '',
+  // 추가 서비스 정보
+  patentUtilizationReport: false,
+  patentValueEvaluationReport: false,
+  annualFeeEstimation: false,
+  patentApplicationNumber1: "",
+  patentApplicationNumber2: "",
 })
 
 // 기술상담신청 폼 상태
@@ -48,7 +54,13 @@ const [technologyForm, setTechnologyForm] = useState({
   mobilePhone: '',
   email: '',
   desiredTechnology: '',
-  technologyRequirements: ''
+  technologyRequirements: '',
+  // 추가 서비스 정보
+  patentUtilizationReport: false,
+  patentValueEvaluationReport: false,
+  annualFeeEstimation: false,
+  patentApplicationNumber1: "",
+  patentApplicationNumber2: "",
 })
 
 const [isSubmitting, setIsSubmitting] = useState(false)
@@ -126,7 +138,12 @@ const handleParticipantSubmit = async () => {
         contactName: '',
         departmentPosition: '',
         mobilePhone: '',
-        email: ''
+        email: '',
+        patentUtilizationReport: false,
+        patentValueEvaluationReport: false,
+        annualFeeEstimation: false,
+        patentApplicationNumber1: "",
+        patentApplicationNumber2: "",
       })
     } else {
       alert('참가 신청 제출 중 오류가 발생했습니다: ' + result.error)
@@ -180,7 +197,12 @@ const handleTechnologySubmit = async () => {
         mobilePhone: '',
         email: '',
         desiredTechnology: '',
-        technologyRequirements: ''
+        technologyRequirements: '',
+        patentUtilizationReport: false,
+        patentValueEvaluationReport: false,
+        annualFeeEstimation: false,
+        patentApplicationNumber1: "",
+        patentApplicationNumber2: "",
       })
     } else {
       alert('기술상담신청 제출 중 오류가 발생했습니다: ' + result.error)
@@ -326,6 +348,7 @@ return (
     {/* Home banner */}
     {!activeTab && (
       <div className="space-y-8">
+        {/* 1. 행사 포스터 */}
         <div className="relative rounded-xl overflow-hidden">
           <Image
             src="/images/home-banner.png"
@@ -334,6 +357,26 @@ return (
             height={600}
             className="w-full h-auto"
             priority
+          />
+        </div>
+        {/* 2. 행사 일정표 */}
+        <div className="relative rounded-xl overflow-hidden">
+          <Image
+            src="/images/event-schedule.png"
+            alt="2025 디지털테크 대학 기술사업화 유망기술 설명회 - 행사 일정 (발표장 및 상담장 스케줄)"
+            width={1200}
+            height={800}
+            className="w-full h-auto"
+          />
+        </div>
+        {/* 3. 사전 등록기업 특별 혜택 */}
+        <div className="relative rounded-xl overflow-hidden">
+          <Image
+            src="/images/special-benefits.png"
+            alt="2025 디지털테크 대학 기술사업화 유망기술 설명회 - 사전 등록기업 특별 혜택"
+            width={1200}
+            height={800}
+            className="w-full h-auto"
           />
         </div>
       </div>
@@ -691,7 +734,7 @@ return (
                       onChange={(e) => setParticipantForm(prev => ({ ...prev, mobilePhone: e.target.value }))}
                     />
                   </div>
-                                      <div className="space-y-2">
+                    <div className="space-y-2">
                       <label className="text-sm font-medium text-gray-700">이메일 *</label>
                       <Input 
                         type="email" 
@@ -701,6 +744,55 @@ return (
                         onChange={(e) => setParticipantForm(prev => ({ ...prev, email: e.target.value }))}
                       />
                     </div>
+                </div>
+              </div>
+
+               {/* 추가 서비스 */}
+               <div className="border-t pt-4">
+                <h4 className="text-sm font-semibold text-gray-700 mb-3">사전등록기업 특별혜택 (~8/22)</h4>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="flex items-start space-x-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <div className="flex-1">
+                        <div className="text-sm font-medium text-gray-700">특허활용보고서</div>
+                        <div className="text-xs text-gray-500 mb-2">특허 기술의 활용 방안 및 사업화 전략 분석</div>
+                      </div>
+                    </label>
+                    <div className="ml-7">
+                      <Input placeholder="특허출원번호를 입력하세요 (예: 10-2023-0123456)" className="text-sm" value={participantForm.patentApplicationNumber1} onChange={(e) => setParticipantForm(prev => ({ ...prev, patentApplicationNumber1: e.target.value }))} />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="flex items-start space-x-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <div className="flex-1">
+                        <div className="text-sm font-medium text-gray-700">특허가치평가보고서</div>
+                        <div className="text-xs text-gray-500 mb-2">특허의 기술적, 경제적 가치 평가 및 분석</div>
+                      </div>
+                    </label>
+                    <div className="ml-7">
+                      <Input placeholder="특허출원번호를 입력하세요 (예: 10-2023-0123456)" className="text-sm" value={participantForm.patentApplicationNumber2} onChange={(e) => setParticipantForm(prev => ({ ...prev, patentApplicationNumber2: e.target.value }))} />
+                    </div>
+                  </div>
+
+                  <label className="flex items-start space-x-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                    <div>
+                      <div className="text-sm font-medium text-gray-700">연차료 예상비용 측정</div>
+                      <div className="text-xs text-gray-500">특허 유지를 위한 연차료 비용 산정 및 예측</div>
+                    </div>
+                  </label>
                 </div>
               </div>
 
@@ -877,6 +969,55 @@ return (
                       onChange={(e) => setTechnologyForm(prev => ({ ...prev, technologyRequirements: e.target.value }))}
                     />
                   </div>
+                </div>
+              </div>
+
+               {/* 추가 서비스 */}
+               <div className="border-t pt-4">
+                <h4 className="text-sm font-semibold text-gray-700 mb-3">사전등록기업 특별혜택 (~8/22)</h4>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="flex items-start space-x-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <div className="flex-1">
+                        <div className="text-sm font-medium text-gray-700">특허활용보고서</div>
+                        <div className="text-xs text-gray-500 mb-2">특허 기술의 활용 방안 및 사업화 전략 분석</div>
+                      </div>
+                    </label>
+                    <div className="ml-7">
+                      <Input placeholder="특허출원번호를 입력하세요 (예: 10-2023-0123456)" className="text-sm" value={technologyForm.patentApplicationNumber1} onChange={(e) => setTechnologyForm(prev => ({ ...prev, patentApplicationNumber1: e.target.value }))} />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="flex items-start space-x-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <div className="flex-1">
+                        <div className="text-sm font-medium text-gray-700">특허가치평가보고서</div>
+                        <div className="text-xs text-gray-500 mb-2">특허의 기술적, 경제적 가치 평가 및 분석</div>
+                      </div>
+                    </label>
+                    <div className="ml-7">
+                      <Input placeholder="특허출원번호를 입력하세요 (예: 10-2023-0123456)" className="text-sm" value={technologyForm.patentApplicationNumber2} onChange={(e) => setTechnologyForm(prev => ({ ...prev, patentApplicationNumber2: e.target.value }))} />
+                    </div>
+                  </div>
+
+                  <label className="flex items-start space-x-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                    <div>
+                      <div className="text-sm font-medium text-gray-700">연차료 예상비용 측정</div>
+                      <div className="text-xs text-gray-500">특허 유지를 위한 연차료 비용 산정 및 예측</div>
+                    </div>
+                  </label>
                 </div>
               </div>
 

@@ -19,7 +19,12 @@ export async function POST(request: NextRequest) {
       mobilePhone,
       email,
       desiredTechnology,
-      technologyRequirements
+      technologyRequirements,
+      patentUtilizationReport,
+      patentValueEvaluationReport,
+      annualFeeEstimation,
+      patentApplicationNumber1,
+      patentApplicationNumber2
     } = body;
 
     // 필수 필드 검증
@@ -46,8 +51,13 @@ export async function POST(request: NextRequest) {
         mobile_phone,
         email,
         desired_technology,
-        technology_requirements
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        technology_requirements,
+        patent_utilization_report,
+        patent_value_evaluation_report,
+        annual_fee_estimation,
+        patent_application_number1,
+        patent_application_number2
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const params = [
@@ -64,7 +74,12 @@ export async function POST(request: NextRequest) {
       mobilePhone,
       email,
       desiredTechnology,
-      technologyRequirements
+      technologyRequirements,
+      patentUtilizationReport || false,
+      patentValueEvaluationReport || false,
+      annualFeeEstimation || false,
+      patentApplicationNumber1 || null,
+      patentApplicationNumber2 || null
     ];
 
     // 데이터베이스에 저장

@@ -33,8 +33,10 @@ export async function POST(request: NextRequest) {
         presentation_room, company_name, representative_name, established_date, 
         company_phone, fax_phone, company_address, business_type, employee_count, 
         contact_person, department, position, mobile_phone, email, 
-        technology_content, consultation_type, status, applied_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        technology_content, patent_utilization_report, patent_value_evaluation_report,
+        annual_fee_estimation, patent_application_number1, patent_application_number2,
+        consultation_type, status, applied_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `
 
     const params = [
@@ -59,6 +61,11 @@ export async function POST(request: NextRequest) {
       body.mobilePhone,
       body.email,
       body.technologyContent,
+      body.patentUtilizationReport || false,
+      body.patentValueEvaluationReport || false,
+      body.annualFeeEstimation || false,
+      body.patentApplicationNumber1 || null,
+      body.patentApplicationNumber2 || null,
       '발표상담',
       '대기',
       today
@@ -90,7 +97,8 @@ export async function GET() {
         presentation_room, company_name, representative_name, established_date, 
         company_phone, fax_phone, company_address, business_type, employee_count, 
         contact_person, department, position, mobile_phone, email, 
-        technology_content, consultation_type, status, applied_at,
+        technology_content, patent_utilization_report, patent_value_evaluation_report,
+        annual_fee_estimation, patent_application_number1, patent_application_number2, consultation_type, status, applied_at,
         created_at, updated_at
       FROM pnu_techfair_presentation_consultations 
       WHERE is_deleted = FALSE 

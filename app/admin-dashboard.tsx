@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Users, Phone, FileText, BarChart3, Clock, Search, Download, Eye, X, Building, User, RefreshCw, Trash2 } from 'lucide-react'
+import { Users, Phone, FileText, BarChart3, Clock, Search, Download, Eye, X, Building, User, RefreshCw, Trash2, CheckCircle, XCircle } from 'lucide-react'
 
 // 확장된 모의 데이터
 const mockApplications = [
@@ -459,6 +459,81 @@ function ApplicationDetailModal({
             </div>
           )}
 
+           {/* 사전등록기업 특별혜택 정보 */}
+           {(application.patentUtilizationReport ||
+            application.patentValueEvaluationReport ||
+            application.annualFeeEstimation) && (
+            <div className="border rounded-lg p-4 bg-yellow-50">
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-yellow-800">
+                <CheckCircle className="w-5 h-5" />
+                사전등록기업 특별혜택 신청 현황
+              </h3>
+              <div className="space-y-4">
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div className="flex items-center gap-2">
+                    {application.patentUtilizationReport ? (
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                    ) : (
+                      <XCircle className="w-4 h-4 text-gray-400" />
+                    )}
+                    <span
+                      className={`text-sm font-medium ${application.patentUtilizationReport ? "text-green-700" : "text-gray-500"}`}
+                    >
+                      특허활용보고서
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {application.patentValueEvaluationReport ? (
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                    ) : (
+                      <XCircle className="w-4 h-4 text-gray-400" />
+                    )}
+                    <span
+                      className={`text-sm font-medium ${application.patentValueEvaluationReport ? "text-green-700" : "text-gray-500"}`}
+                    >
+                      특허가치평가보고서
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {application.annualFeeEstimation ? (
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                    ) : (
+                      <XCircle className="w-4 h-4 text-gray-400" />
+                    )}
+                    <span
+                      className={`text-sm font-medium ${application.annualFeeEstimation ? "text-green-700" : "text-gray-500"}`}
+                    >
+                      연차료 예상비용 측정
+                    </span>
+                  </div>
+                </div>
+
+                {/* 특허출원번호 정보 */}
+                {(application.patentApplicationNumber1 || application.patentApplicationNumber2) && (
+                  <div className="border-t pt-4 mt-4">
+                    <h4 className="text-sm font-semibold text-gray-700 mb-3">제출된 특허출원번호</h4>
+                    <div className="space-y-2">
+                      {application.patentApplicationNumber1 && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">특허활용보고서</span>
+                          <span className="text-sm font-mono">{application.patentApplicationNumber1}</span>
+                        </div>
+                      )}
+                      {application.patentApplicationNumber2 && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">
+                            특허가치평가보고서
+                          </span>
+                          <span className="text-sm font-mono">{application.patentApplicationNumber2}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* 액션 버튼 */}
           <div className="flex justify-end gap-3 pt-4 border-t">
             <Button variant="outline" onClick={onClose}>
@@ -569,7 +644,7 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
     window.location.reload()
   }
 
-  const allApplications = [...mockApplications, ...consultationApplications, ...participantApplications, ...technologyConsultations, ...patentConsultations]
+  const allApplications = [...mockApplications, ...consultationApplications, ...participantApplications, ...technologyConsultations, ...patentConsultations, ...presentationConsultations, ...exhibitConsultations]
 
   const filteredApplications = allApplications.filter(
     (app) =>
@@ -679,6 +754,12 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
           department: app.department_position?.split(' ')[0] || '',
           position: app.department_position?.split(' ').slice(1).join(' ') || '',
           contactPerson: app.contact_name,
+          // 추가 서비스 정보
+          patentUtilizationReport: app.patent_utilization_report || false,
+          patentValueEvaluationReport: app.patent_value_evaluation_report || false,
+          annualFeeEstimation: app.annual_fee_estimation || false,
+          patentApplicationNumber1: app.patent_application_number1 || '',
+          patentApplicationNumber2: app.patent_application_number2 || '',
         }))
         setParticipantApplications(formattedData)
       }
@@ -720,6 +801,12 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
           // 기술상담 특화 정보
           technology: app.desired_technology,
           technologyContent: app.technology_requirements,
+          // 추가 서비스 정보
+          patentUtilizationReport: app.patent_utilization_report || false,
+          patentValueEvaluationReport: app.patent_value_evaluation_report || false,
+          annualFeeEstimation: app.annual_fee_estimation || false,
+          patentApplicationNumber1: app.patent_application_number1 || '',
+          patentApplicationNumber2: app.patent_application_number2 || '',
         }))
         setTechnologyConsultations(formattedData)
       }
@@ -771,6 +858,12 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
           },
           technology: app.presentation_title,
           technologyContent: app.technology_content,
+          // 추가 서비스 정보
+          patentUtilizationReport: app.patent_utilization_report || false,
+          patentValueEvaluationReport: app.patent_value_evaluation_report || false,
+          annualFeeEstimation: app.annual_fee_estimation || false,
+          patentApplicationNumber1: app.patent_application_number1 || '',
+          patentApplicationNumber2: app.patent_application_number2 || '',
         }))
         setPresentationConsultations(formattedData)
       }
@@ -821,6 +914,12 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
           },
           technology: app.exhibit_title,
           technologyContent: app.technology_content,
+          // 추가 서비스 정보
+          patentUtilizationReport: app.patent_utilization_report || false,
+          patentValueEvaluationReport: app.patent_value_evaluation_report || false,
+          annualFeeEstimation: app.annual_fee_estimation || false,
+          patentApplicationNumber1: app.patent_application_number1 || '',
+          patentApplicationNumber2: app.patent_application_number2 || '',
         }))
         setExhibitConsultations(formattedData)
       }
@@ -870,7 +969,13 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
             fee: app.patent_fee,
             applicationDate: app.patent_application_date,
             expiryDate: app.patent_expiry_date,
-          }
+          },
+          // 추가 서비스 정보
+          patentUtilizationReport: app.patent_utilization_report || false,
+          patentValueEvaluationReport: app.patent_value_evaluation_report || false,
+          annualFeeEstimation: app.annual_fee_estimation || false,
+          patentApplicationNumber1: app.patent_application_number1 || '',
+          patentApplicationNumber2: app.patent_application_number2 || '',
         }))
         setPatentConsultations(formattedData)
       }
@@ -909,6 +1014,7 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
         <nav className="flex space-x-8">
           {[
             { id: "dashboard", label: "대시보드", icon: BarChart3 },
+            { id: "special-benefits", label: "특별혜택 신청현황", icon: CheckCircle },
             { id: "exhibit-management", label: "출품기술 기업관리", icon: Building },
             { id: "patent-consultations", label: "특허목록 상담신청", icon: FileText },
             { id: "applications", label: "참가신청관리", icon: Users },
@@ -938,6 +1044,20 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
         <div className="space-y-6">
           {/* 통계 카드 */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">총 신청</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {participantApplications.length + technologyConsultations.length + patentConsultations.length + presentationConsultations.length + exhibitConsultations.length}
+                    </p>
+                  </div>
+                  <FileText className="w-8 h-8 text-purple-600" />
+                </div>
+                <div className="mt-2 text-sm text-blue-600">전체 신청 현황</div>
+              </CardContent>
+            </Card>
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
@@ -976,6 +1096,23 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                 <div className="mt-2 text-sm text-blue-600">특허 기반 상담</div>
               </CardContent>
             </Card>
+            
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">특별혜택 신청</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {allApplications.filter(app => 
+                        app.patentUtilizationReport || app.patentValueEvaluationReport || app.annualFeeEstimation
+                      ).length}
+                    </p>
+                  </div>
+                  <CheckCircle className="w-8 h-8 text-yellow-600" />
+                </div>
+                <div className="mt-2 text-sm text-yellow-600">사전등록 혜택</div>
+              </CardContent>
+            </Card>
 
             <Card>
               <CardContent className="p-6">
@@ -1003,22 +1140,9 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
               </CardContent>
             </Card>
 
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">총 신청</p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {participantApplications.length + technologyConsultations.length + patentConsultations.length + presentationConsultations.length + exhibitConsultations.length}
-                    </p>
-                  </div>
-                  <FileText className="w-8 h-8 text-purple-600" />
-                </div>
-                <div className="mt-2 text-sm text-blue-600">전체 신청 현황</div>
-              </CardContent>
-            </Card>
+            
 
-            <Card>
+            {/* <Card>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -1029,11 +1153,13 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                 </div>
                 <div className="mt-2 text-sm text-green-600">+25% 지난주 대비</div>
               </CardContent>
-            </Card>
+            </Card> */}
+            
+            
           </div>
 
           {/* 최근 활동 */}
-          <div className="grid lg:grid-cols-3 gap-6">
+          {/* <div className="grid lg:grid-cols-3 gap-6">
             <Card>
               <CardHeader>
                 <CardTitle>최근 참가신청</CardTitle>
@@ -1128,7 +1254,188 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                 </div>
               </CardContent>
             </Card>
+          </div> */}
+        </div>
+      )}
+
+      {/* 특별혜택 신청현황 탭 */}
+      {activeAdminTab === "special-benefits" && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-semibold">사전등록기업 특별혜택 신청현황</h3>
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <Input
+                  placeholder="회사명 또는 대표자명 검색"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pr-10 w-64"
+                />
+                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              </div>
+              {/* <Button
+                variant="outline"
+                className="flex items-center gap-2 bg-transparent"
+                onClick={handleExcelDownload}
+              >
+                <Download className="w-4 h-4" />
+                특별혜택 현황 다운로드
+              </Button> */}
+            </div>
           </div>
+
+          {/* 특별혜택 통계 카드 */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">총 신청건수</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {allApplications.filter(app => 
+                        app.patentUtilizationReport || app.patentValueEvaluationReport || app.annualFeeEstimation
+                      ).length}
+                    </p>
+                  </div>
+                  <FileText className="w-8 h-8 text-blue-600" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">특허활용보고서</p>
+                    <p className="text-2xl font-bold text-green-600">
+                      {allApplications.filter(app => app.patentUtilizationReport).length}
+                    </p>
+                  </div>
+                  <CheckCircle className="w-8 h-8 text-green-600" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">특허가치평가보고서</p>
+                    <p className="text-2xl font-bold text-purple-600">
+                      {allApplications.filter(app => app.patentValueEvaluationReport).length}
+                    </p>
+                  </div>
+                  <CheckCircle className="w-8 h-8 text-purple-600" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">연차료 예상비용 측정</p>
+                    <p className="text-2xl font-bold text-orange-600">
+                      {allApplications.filter(app => app.annualFeeEstimation).length}
+                    </p>
+                  </div>
+                  <CheckCircle className="w-8 h-8 text-orange-600" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>번호</TableHead>
+                    <TableHead>회사명</TableHead>
+                    <TableHead>담당자</TableHead>
+                    <TableHead>신청유형</TableHead>
+                    <TableHead>특허활용보고서</TableHead>
+                    <TableHead>특허가치평가보고서</TableHead>
+                    <TableHead>연차료 예상비용</TableHead>
+                    <TableHead>신청일</TableHead>
+                    <TableHead>관리</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {allApplications
+                    .filter(
+                      (app) =>
+                        app.patentUtilizationReport || app.patentValueEvaluationReport || app.annualFeeEstimation,
+                    )
+                    .map((app, index) => (
+                      <TableRow key={app.id} className="hover:bg-gray-50">
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell className="font-medium">{app.companyName}</TableCell>
+                        <TableCell>{app.contactPerson || app.representative}</TableCell>
+                        <TableCell>
+                          <span
+                            className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${
+                              app.type === "참가신청" ? "bg-blue-100 text-blue-800" : "bg-green-100 text-green-800"
+                            }`}
+                          >
+                            {app.type}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            {app.patentUtilizationReport ? (
+                              <CheckCircle className="w-4 h-4 text-green-600" />
+                            ) : (
+                              <XCircle className="w-4 h-4 text-gray-400" />
+                            )}
+                            {app.patentApplicationNumber1 && (
+                              <span className="text-xs font-mono bg-gray-100 px-1 rounded">
+                                {app.patentApplicationNumber1}
+                              </span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            {app.patentValueEvaluationReport ? (
+                              <CheckCircle className="w-4 h-4 text-purple-600" />
+                            ) : (
+                              <XCircle className="w-4 h-4 text-gray-400" />
+                            )}
+                            {app.patentApplicationNumber2 && (
+                              <span className="text-xs font-mono bg-gray-100 px-1 rounded">
+                                {app.patentApplicationNumber2}
+                              </span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {app.annualFeeEstimation ? (
+                            <CheckCircle className="w-4 h-4 text-orange-600" />
+                          ) : (
+                            <XCircle className="w-4 h-4 text-gray-400" />
+                          )}
+                        </TableCell>
+                        <TableCell>{app.appliedAt ? new Date(app.appliedAt).toISOString().split('T')[0] : '미입력'}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Button size="sm" variant="outline" onClick={() => handleViewDetail(app)}>
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  {allApplications.filter(
+                    (app) => app.patentUtilizationReport || app.patentValueEvaluationReport || app.annualFeeEstimation,
+                  ).length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={9} className="h-24 text-center text-gray-500">
+                        특별혜택을 신청한 기업이 없습니다.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
         </div>
       )}
 
@@ -1177,6 +1484,7 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                     <TableHead className="min-w-[120px] whitespace-nowrap">대표자</TableHead>
                     <TableHead className="min-w-[140px] whitespace-nowrap">연락처</TableHead>
                     <TableHead className="min-w-[200px]">이메일</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap text-center">특별혜택</TableHead>
                     <TableHead className="min-w-[120px] whitespace-nowrap">신청일</TableHead>
                     <TableHead className="min-w-[120px] text-center">관리</TableHead>
                   </TableRow>
@@ -1210,6 +1518,22 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                           <TableCell>{app.representative}</TableCell>
                           <TableCell>{app.contact}</TableCell>
                           <TableCell>{app.email}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-1 justify-center">
+                              {app.patentUtilizationReport && (
+                                <CheckCircle className="w-3 h-3 text-green-600" />
+                              )}
+                              {app.patentValueEvaluationReport && (
+                                <CheckCircle className="w-3 h-3 text-purple-600" />
+                              )}
+                              {app.annualFeeEstimation && (
+                                <CheckCircle className="w-3 h-3 text-orange-600" />
+                              )}
+                              {!app.patentUtilizationReport &&
+                                !app.patentValueEvaluationReport &&
+                                !app.annualFeeEstimation && <span className="text-xs text-gray-500">없음</span>}
+                            </div>
+                          </TableCell>
                           <TableCell>{app.appliedAt ? new Date(app.appliedAt).toISOString().split('T')[0] : '미입력'}</TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
@@ -1271,6 +1595,7 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                     <TableHead className="min-w-[200px]">회사명</TableHead>
                     <TableHead className="min-w-[120px] whitespace-nowrap">담당자</TableHead>
                     <TableHead className="min-w-[300px]">희망기술</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap text-center">특별혜택</TableHead>
                     <TableHead className="min-w-[120px] whitespace-nowrap">신청일</TableHead>
                     <TableHead className="min-w-[120px] text-center">관리</TableHead>
                   </TableRow>
@@ -1306,6 +1631,22 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                           <TableCell className="max-w-xs truncate" title={app.technology}>
                             {app.technology}
                           </TableCell>
+                          <TableCell>
+                          <div className="flex items-center gap-1 justify-center">
+                            {app.patentUtilizationReport && (
+                              <CheckCircle className="w-3 h-3 text-green-600" title="특허활용보고서" />
+                            )}
+                            {app.patentValueEvaluationReport && (
+                              <CheckCircle className="w-3 h-3 text-purple-600" title="특허가치평가보고서" />
+                            )}
+                            {app.annualFeeEstimation && (
+                              <CheckCircle className="w-3 h-3 text-orange-600" title="연차료 예상비용 측정" />
+                            )}
+                            {!app.patentUtilizationReport &&
+                              !app.patentValueEvaluationReport &&
+                              !app.annualFeeEstimation && <span className="text-xs text-gray-500">없음</span>}
+                          </div>
+                        </TableCell>
                           <TableCell>{app.appliedAt ? new Date(app.appliedAt).toISOString().split('T')[0] : '미입력'}</TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
@@ -1369,6 +1710,7 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                     <TableHead className="min-w-[300px]">특허명</TableHead>
                     <TableHead className="min-w-[120px] whitespace-nowrap">기술분야</TableHead>
                     <TableHead className="min-w-[120px] whitespace-nowrap">기술료</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap text-center">특별혜택</TableHead>
                     <TableHead className="min-w-[120px] whitespace-nowrap">신청일</TableHead>
                     <TableHead className="min-w-[120px] text-center">관리</TableHead>
                   </TableRow>
@@ -1410,6 +1752,22 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                             </span>
                           </TableCell>
                           <TableCell className="font-semibold text-green-600">{app.patent?.fee}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-1 justify-center">
+                              {app.patentUtilizationReport && (
+                                <CheckCircle className="w-3 h-3 text-green-600" />
+                              )}
+                              {app.patentValueEvaluationReport && (
+                                <CheckCircle className="w-3 h-3 text-purple-600" />
+                              )}
+                              {app.annualFeeEstimation && (
+                                <CheckCircle className="w-3 h-3 text-orange-600" />
+                              )}
+                              {!app.patentUtilizationReport &&
+                                !app.patentValueEvaluationReport &&
+                                !app.annualFeeEstimation && <span className="text-xs text-gray-500">없음</span>}
+                            </div>
+                          </TableCell>
                           <TableCell>{app.appliedAt ? new Date(app.appliedAt).toISOString().split('T')[0] : '미입력'}</TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
@@ -1478,6 +1836,7 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                     <TableHead className="min-w-[120px] whitespace-nowrap">담당자</TableHead>
                     <TableHead className="min-w-[300px]">발표명</TableHead>
                     <TableHead className="min-w-[120px] whitespace-nowrap">시간</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap text-center">특별혜택</TableHead>
                     <TableHead className="min-w-[120px] whitespace-nowrap">신청일</TableHead>
                     <TableHead className="min-w-[120px] text-center">관리</TableHead>
                   </TableRow>
@@ -1514,6 +1873,22 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                             {app.presentation?.title || app.technology}
                           </TableCell>
                           <TableCell>{app.presentation?.time || "-"}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-1 justify-center">
+                              {app.patentUtilizationReport && (
+                                <CheckCircle className="w-3 h-3 text-green-600" />
+                              )}
+                              {app.patentValueEvaluationReport && (
+                                <CheckCircle className="w-3 h-3 text-purple-600" />
+                              )}
+                              {app.annualFeeEstimation && (
+                                <CheckCircle className="w-3 h-3 text-orange-600" />
+                              )}
+                              {!app.patentUtilizationReport &&
+                                !app.patentValueEvaluationReport &&
+                                !app.annualFeeEstimation && <span className="text-xs text-gray-500">없음</span>}
+                            </div>
+                          </TableCell>
                           <TableCell>{app.appliedAt ? new Date(app.appliedAt).toISOString().split('T')[0] : '미입력'}</TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
@@ -1557,6 +1932,7 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                     <TableHead className="min-w-[120px] whitespace-nowrap">담당자</TableHead>
                     <TableHead className="min-w-[300px]">출품명</TableHead>
                     <TableHead className="min-w-[120px] whitespace-nowrap">기술분야</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap text-center">특별혜택</TableHead>
                     <TableHead className="min-w-[120px] whitespace-nowrap">신청일</TableHead>
                     <TableHead className="min-w-[120px] text-center">관리</TableHead>
                   </TableRow>
@@ -1596,6 +1972,22 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                             <span className="inline-block px-2 py-1 bg-emerald-100 text-emerald-800 text-xs font-medium rounded-full">
                               {app.exhibit?.techField}
                             </span>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-1 justify-center">
+                              {app.patentUtilizationReport && (
+                                <CheckCircle className="w-3 h-3 text-green-600" />
+                              )}
+                              {app.patentValueEvaluationReport && (
+                                <CheckCircle className="w-3 h-3 text-purple-600" />
+                              )}
+                              {app.annualFeeEstimation && (
+                                <CheckCircle className="w-3 h-3 text-orange-600" />
+                              )}
+                              {!app.patentUtilizationReport &&
+                                !app.patentValueEvaluationReport &&
+                                !app.annualFeeEstimation && <span className="text-xs text-gray-500">없음</span>}
+                            </div>
                           </TableCell>
                           <TableCell>{app.appliedAt ? new Date(app.appliedAt).toISOString().split('T')[0] : '미입력'}</TableCell>
                           <TableCell>
