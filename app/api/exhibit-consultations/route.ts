@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
         technology_content, patent_utilization_report, patent_value_evaluation_report,
         annual_fee_estimation, patent_application_number1, patent_application_number2,
         consultation_type, status, applied_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `
 
     const params = [
@@ -96,7 +96,8 @@ export async function GET() {
         company_name, representative_name, established_date, 
         company_phone, fax_phone, company_address, business_type, employee_count, 
         contact_person, department, position, mobile_phone, email, 
-        technology_content, consultation_type, status, applied_at,
+        technology_content, patent_utilization_report, patent_value_evaluation_report,
+        annual_fee_estimation, patent_application_number1, patent_application_number2, consultation_type, status, applied_at,
         created_at, updated_at
       FROM pnu_techfair_exhibit_consultations 
       WHERE is_deleted = FALSE 

@@ -464,7 +464,6 @@ export function PatentReportModal({ isOpen, onClose, patent }: PatentReportModal
       const data = await response.json()
 
       if (response.ok) {
-        console.log(data)
         // 기본값을 설정하여 undefined 오류 방지
         const safeReport: PatentReport = {
           patentInfo: data.patentInfo || {

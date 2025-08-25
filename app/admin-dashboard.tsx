@@ -644,8 +644,7 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
     window.location.reload()
   }
 
-  const allApplications = [...mockApplications, ...consultationApplications, ...participantApplications, ...technologyConsultations, ...patentConsultations, ...presentationConsultations, ...exhibitConsultations]
-
+  const allApplications = [...consultationApplications, ...participantApplications, ...technologyConsultations, ...patentConsultations, ...presentationConsultations, ...exhibitConsultations]
   const filteredApplications = allApplications.filter(
     (app) =>
       app.companyName?.toLowerCase?.().includes(searchTerm.toLowerCase()) ||
@@ -732,7 +731,7 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
     try {
       const response = await fetch('/api/participant-applications')
       const result = await response.json()
-      
+      console.log(result.data)
       if (result.success) {
         // 데이터 형식을 통일
         const formattedData = result.data.map((app: any) => ({
@@ -1365,17 +1364,23 @@ export default function AdminDashboard({ consultationApplications = [] }: AdminD
                         app.patentUtilizationReport || app.patentValueEvaluationReport || app.annualFeeEstimation,
                     )
                     .map((app, index) => (
-                      <TableRow key={app.id} className="hover:bg-gray-50">
+                      <TableRow key={`${app.type}-${app.origin || 'default'}-${app.id}`}  className="hover:bg-gray-50">
                         <TableCell>{index + 1}</TableCell>
                         <TableCell className="font-medium">{app.companyName}</TableCell>
                         <TableCell>{app.contactPerson || app.representative}</TableCell>
                         <TableCell>
                           <span
                             className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${
-                              app.type === "참가신청" ? "bg-blue-100 text-blue-800" : "bg-green-100 text-green-800"
+                              app.type === "참가신청" 
+                                ? "bg-blue-100 text-blue-800" 
+                                : app.type === "특허상담"
+                                ? "bg-emerald-100 text-emerald-800"
+                                : app.type === "기술상담"
+                                ? "bg-purple-100 text-purple-800"
+                                : "bg-green-100 text-green-800"
                             }`}
                           >
-                            {app.type}
+                           {app.type}
                           </span>
                         </TableCell>
                         <TableCell>

@@ -755,6 +755,8 @@ return (
                     <label className="flex items-start space-x-3 cursor-pointer">
                       <input
                         type="checkbox"
+                        checked={participantForm.patentUtilizationReport}
+                        onChange={(e) => setParticipantForm(prev => ({ ...prev, patentUtilizationReport: e.target.checked }))}
                         className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                       />
                       <div className="flex-1">
@@ -771,6 +773,8 @@ return (
                     <label className="flex items-start space-x-3 cursor-pointer">
                       <input
                         type="checkbox"
+                        checked={participantForm.patentValueEvaluationReport}
+                        onChange={(e) => setParticipantForm(prev => ({ ...prev, patentValueEvaluationReport: e.target.checked }))}
                         className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                       />
                       <div className="flex-1">
@@ -786,6 +790,8 @@ return (
                   <label className="flex items-start space-x-3 cursor-pointer">
                     <input
                       type="checkbox"
+                      checked={participantForm.annualFeeEstimation}
+                      onChange={(e) => setParticipantForm(prev => ({ ...prev, annualFeeEstimation: e.target.checked }))}
                       className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
                     <div>
@@ -980,6 +986,8 @@ return (
                     <label className="flex items-start space-x-3 cursor-pointer">
                       <input
                         type="checkbox"
+                        checked={technologyForm.patentUtilizationReport}
+                        onChange={(e) => setTechnologyForm(prev => ({ ...prev, patentUtilizationReport: e.target.checked }))}
                         className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                       />
                       <div className="flex-1">
@@ -996,6 +1004,8 @@ return (
                     <label className="flex items-start space-x-3 cursor-pointer">
                       <input
                         type="checkbox"
+                        checked={technologyForm.patentValueEvaluationReport}
+                        onChange={(e) => setTechnologyForm(prev => ({ ...prev, patentValueEvaluationReport: e.target.checked }))}
                         className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                       />
                       <div className="flex-1">
@@ -1011,6 +1021,8 @@ return (
                   <label className="flex items-start space-x-3 cursor-pointer">
                     <input
                       type="checkbox"
+                      checked={technologyForm.annualFeeEstimation}
+                      onChange={(e) => setTechnologyForm(prev => ({ ...prev, annualFeeEstimation: e.target.checked }))}
                       className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
                     <div>

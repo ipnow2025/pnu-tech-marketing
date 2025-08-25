@@ -42,6 +42,7 @@ export function PatentTable({ onConsultationSubmit }: PatentTableProps) {
 
   const handleConsultationClick = (patent: Patent, e: React.MouseEvent) => {
     e.stopPropagation()
+    setSelectedPatent(patent)
     setShowConsultationModal(true)
   }
 
@@ -49,6 +50,11 @@ export function PatentTable({ onConsultationSubmit }: PatentTableProps) {
     onConsultationSubmit?.(consultationData)
     setShowConsultationModal(false)
     alert("기술상담 신청이 완료되었습니다. 관리자 검토 후 연락드리겠습니다.")
+  }
+
+  const handleConsultationClose = () => {
+    setShowConsultationModal(false)
+    setSelectedPatent(null) // 특허 활용보고서 모달도 함께 닫기
   }
 
   const resetFilters = () => {
@@ -227,7 +233,7 @@ export function PatentTable({ onConsultationSubmit }: PatentTableProps) {
       </div>
 
       {/* 상담신청 모달 */}
-      <PatentConsultationModal isOpen={showConsultationModal} onClose={() => setShowConsultationModal(false)} patent={selectedPatent} onSubmit={handleConsultationSubmit} />
+      <PatentConsultationModal isOpen={showConsultationModal} onClose={handleConsultationClose} patent={selectedPatent} onSubmit={handleConsultationSubmit} />
     </div>
   )
 }
